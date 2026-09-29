@@ -178,3 +178,44 @@ CREATE TABLE Venta
         FOREIGN KEY (id_metodo)
         REFERENCES Metodo_Pago(id_metodo)
 );
+
+CREATE TABLE Detalle_Venta
+(
+    codigo_detalle INT IDENTITY(1,1) NOT NULL,
+    nro_comprobante INT NOT NULL,
+    codigo_producto INT NOT NULL,
+    cantidad DECIMAL(10,2) NOT NULL,
+    precio_unitario DECIMAL(12,2) NOT NULL,
+    CONSTRAINT PK_Detalle_Venta PRIMARY KEY (codigo_detalle),
+    CONSTRAINT FK_DetalleVenta_Venta FOREIGN KEY (nro_comprobante) REFERENCES Venta(nro_comprobante),
+    CONSTRAINT FK_DetalleVenta_Producto FOREIGN KEY (codigo_producto) REFERENCES Producto(codigo_producto),
+    CONSTRAINT CHK_DetalleVenta_Cantidad CHECK (cantidad > 0),
+    CONSTRAINT CHK_DetalleVenta_Precio CHECK (precio_unitario >= 0)
+);
+
+CREATE TABLE Movimiento_Stock
+(
+    id_movimiento INT IDENTITY(1,1) NOT NULL,
+    fecha DATETIME NOT NULL DEFAULT GETDATE(),
+    cantidad DECIMAL(10,2) NOT NULL,
+    descripcion VARCHAR(255) NULL,
+    codigo_producto INT NOT NULL,
+    id_tipo_movimiento_stock INT NOT NULL,
+    CONSTRAINT PK_Movimiento_Stock PRIMARY KEY (id_movimiento),
+    CONSTRAINT FK_MovimientoStock_Producto FOREIGN KEY (codigo_producto) REFERENCES Producto(codigo_producto),
+    CONSTRAINT FK_MovimientoStock_TipoMovimiento FOREIGN KEY (id_tipo_movimiento_stock) REFERENCES Tipo_Movimiento_Stock(id_tipo_movimiento_stock),
+    CONSTRAINT CHK_MovimientoStock_Cantidad CHECK (cantidad <> 0)
+);
+
+CREATE TABLE Anulacion_Venta
+(
+    nro_anulacion_venta INT IDENTITY(1,1) NOT NULL,
+    nro_comprobante INT NOT NULL,
+    motivo_anulacion VARCHAR(255) NOT NULL,
+    fecha_anulacion DATETIME NOT NULL DEFAULT GETDATE(),
+    id_usuario INT NOT NULL,
+    CONSTRAINT PK_Anulacion_Venta PRIMARY KEY (nro_anulacion_venta),
+    CONSTRAINT UQ_Anulacion_Venta_Comprobante UNIQUE (nro_comprobante),
+    CONSTRAINT FK_AnulacionVenta_Venta FOREIGN KEY (nro_comprobante) REFERENCES Venta(nro_comprobante),
+    CONSTRAINT FK_AnulacionVenta_Usuario FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+);
