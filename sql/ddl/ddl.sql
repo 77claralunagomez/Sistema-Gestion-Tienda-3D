@@ -1,3 +1,4 @@
+--Tablas independientes
 CREATE TABLE Rol
 (
   id_rol INT IDENTITY(1,1) NOT NULL,
@@ -23,6 +24,55 @@ CREATE TABLE Estado_Consulta
   CONSTRAINT PK_EstadoConsulta PRIMARY KEY (id_estado_consulta)
 );
 
+
+CREATE TABLE Tipo_Estado_Venta 
+(
+	id_estado_venta INT IDENTITY (1,1) NOT NULL,
+	nombre VARCHAR (50) NOT NULL,
+    CONSTRAINT PK_Tipo_Estado_Venta PRIMARY KEY (id_estado_venta)
+
+);
+
+);
+
+CREATE TABLE Categoria 
+(
+	codigo_categoria INT IDENTITY(1,1) NOT NULL,
+	nombre_categoria VARCHAR(50) NOT NULL,
+    CONSTRAINT PK_Categoria PRIMARY KEY (codigo_categoria)
+
+);
+
+CREATE TABLE Marca 
+(
+	id_marca INT IDENTITY (1,1) NOT NULL,
+	nombre_marca VARCHAR(50) NOT NULL
+    CONSTRAINT PK_Marca PRIMARY KEY (id_marca)
+);
+
+CREATE TABLE Unidad_comercio 
+(
+	id_unidad INT IDENTITY (1,1) NOT NULL,
+	nombre VARCHAR (50) NOT NULL,
+    CONSTRAINT PK_Unidad_comercio PRIMARY KEY (id_unidad)
+);
+
+CREATE TABLE Tipo_movimiento_stock
+(
+	id_tipo_movimiento_stock INT IDENTITY (1,1) NOT NULL,
+	nombre VARCHAR (50) NOT NULL,
+    CONSTRAINT PK_Tipo_movimiento_stock PRIMARY KEY (id_tipo_movimiento_stock)
+);
+
+CREATE TABLE Proveedor 
+(
+	id_proveedor INT IDENTITY (1,1) NOT NULL,
+	contacto VARCHAR (100) NOT NULL
+    CONSTRAINT Proveedor PRIMARY KEY (id_proveedor)
+);
+
+
+--Tablas dependientes
 CREATE TABLE Usuario 
 (
 	id_usuario INT IDENTITY (1,1) NOT NULL,
