@@ -108,3 +108,73 @@ CREATE TABLE Consulta
   CONSTRAINT FK_Consulta_DniCliente FOREIGN KEY (dni_cliente) REFERENCES Cliente(dni_cliente),
   CONSTRAINT FK_Consulta_EstadoConsulta FOREIGN KEY (id_estado_consulta) REFERENCES Estado_Consulta(id_estado_consulta)
 );
+
+CREATE TABLE Producto
+(
+    codigo_producto INT IDENTITY(1,1) NOT NULL,
+    descripcion VARCHAR(100) NOT NULL,
+    precio DECIMAL(10,2) NOT NULL,
+    nombre VARCHAR(100) NOT NULL,
+    stock DECIMAL(10,2) NOT NULL,
+    codigo_categoria INT NOT NULL,
+    id_marca INT NOT NULL,
+    id_unidad INT NOT NULL,
+
+    CONSTRAINT PK_Producto PRIMARY KEY (codigo_producto),
+    CONSTRAINT CK_Producto_Precio CHECK (precio > 0),
+    CONSTRAINT CK_Producto_Stock CHECK (stock >= 0),
+
+    CONSTRAINT FK_Producto_Categoria
+        FOREIGN KEY (codigo_categoria)
+        REFERENCES Categoria(codigo_categoria),
+
+    CONSTRAINT FK_Producto_Marca
+        FOREIGN KEY (id_marca)
+        REFERENCES Marca(id_marca),
+
+    CONSTRAINT FK_Producto_Unidad
+        FOREIGN KEY (id_unidad)
+        REFERENCES Unidad_comercio(id_unidad)
+);
+
+CREATE TABLE Proveedor_producto
+(
+    id_proveedor INT NOT NULL,
+    codigo_producto INT NOT NULL,
+
+    CONSTRAINT PK_Proveedor_producto
+        PRIMARY KEY (id_proveedor, codigo_producto),
+
+    CONSTRAINT FK_ProveedorProducto_Proveedor
+        FOREIGN KEY (id_proveedor)
+        REFERENCES Proveedor(id_proveedor),
+
+    CONSTRAINT FK_ProveedorProducto_Producto
+        FOREIGN KEY (codigo_producto)
+        REFERENCES Producto(codigo_producto)
+);
+
+CREATE TABLE Venta
+(
+    nro_comprobante INT IDENTITY(1,1) NOT NULL,
+    fecha DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    id_estado_venta INT NOT NULL,
+    importe DECIMAL(10,2) NOT NULL,
+    dni_cliente VARCHAR(20) NOT NULL,
+    id_metodo INT NOT NULL,
+
+    CONSTRAINT PK_Venta PRIMARY KEY (nro_comprobante),
+    CONSTRAINT CK_Venta_Importe CHECK (importe >= 0),
+
+    CONSTRAINT FK_Venta_Estado
+        FOREIGN KEY (id_estado_venta)
+        REFERENCES Tipo_Estado_Venta(id_estado_venta),
+
+    CONSTRAINT FK_Venta_Cliente
+        FOREIGN KEY (dni_cliente)
+        REFERENCES Cliente(dni_cliente),
+
+    CONSTRAINT FK_Venta_MetodoPago
+        FOREIGN KEY (id_metodo)
+        REFERENCES Metodo_Pago(id_metodo)
+);
