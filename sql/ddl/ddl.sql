@@ -33,8 +33,6 @@ CREATE TABLE Tipo_Estado_Venta
 
 );
 
-);
-
 CREATE TABLE Categoria 
 (
 	codigo_categoria INT IDENTITY(1,1) NOT NULL,
@@ -46,7 +44,7 @@ CREATE TABLE Categoria
 CREATE TABLE Marca 
 (
 	id_marca INT IDENTITY (1,1) NOT NULL,
-	nombre_marca VARCHAR(50) NOT NULL
+	nombre_marca VARCHAR(50) NOT NULL,
     CONSTRAINT PK_Marca PRIMARY KEY (id_marca)
 );
 
@@ -67,7 +65,7 @@ CREATE TABLE Tipo_movimiento_stock
 CREATE TABLE Proveedor 
 (
 	id_proveedor INT IDENTITY (1,1) NOT NULL,
-	contacto VARCHAR (100) NOT NULL
+	contacto VARCHAR (100) NOT NULL,
     CONSTRAINT Proveedor PRIMARY KEY (id_proveedor)
 );
 
@@ -102,7 +100,7 @@ CREATE TABLE Consulta
   id_consulta INT IDENTITY(1,1) NOT NULL,
   canal VARCHAR(200) NOT NULL,
   fecha DATE NOT NULL DEFAULT CURRENT_TIMESTAMP,
-  dni_cliente INT NOT NULL,
+  dni_cliente VARCHAR(20) NOT NULL,
   id_estado_consulta INT NOT NULL,
   CONSTRAINT PK_Consulta PRIMARY KEY (id_consulta),
   CONSTRAINT FK_Consulta_DniCliente FOREIGN KEY (dni_cliente) REFERENCES Cliente(dni_cliente),
