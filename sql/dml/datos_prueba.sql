@@ -1,3 +1,43 @@
+INSERT INTO Categoria (nombre_categoria) VALUES 
+('Filamento PLA'),
+('Filamento ABS'),
+('Filamento PETG'),
+('Resinas SLA'),
+('Repuestos mecánicos'),
+('Accesorios de impresión'),
+('Electrónica'),
+('Herramientas de post-procesamiento');
+
+INSERT INTO Marca (nombre_marca) VALUES 
+('Grillon3'),
+('Esun'),
+('Creality'),
+('Anycubic'),
+('Prusa Research'),
+('Sunlu'),
+('Elegoo'),
+('Plastify');
+
+INSERT INTO Unidad_comercio (nombre) VALUES 
+('Kilogramo'),
+('Unidad'),
+('Litro'),
+('Botella'),
+('Metro'),
+('Rollo'),
+('Pack'),
+('Gramo');
+
+INSERT INTO Tipo_movimiento_stock (nombre) VALUES 
+('Ingreso por compra a proveedor'),
+('Salida por venta directa'),
+('Devolución de cliente'),
+('Reintegro por anulación de venta'),
+('Merma por impresión fallida'),
+('Ajuste de inventario físico'),
+('Consumo interno'),
+('Transferencia interna');
+
 INSERT INTO Proveedor (contacto) VALUES
 ('Juan Pérez - Distribuidora Sur'),
 ('María Gómez - Insumos Central'),
