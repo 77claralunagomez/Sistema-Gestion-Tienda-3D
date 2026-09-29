@@ -1,3 +1,44 @@
+USE Tienda3D;
+GO
+
+INSERT INTO Rol (nombre)
+VALUES
+('Administrador'),
+('Vendedor'),
+('Encargado de Stock'),
+('Supervisor'),
+('Atención al Cliente'),
+('Encargado de Ventas'),
+('Gerente'),
+('Soporte');
+
+INSERT INTO Metodo_Pago (nombre_metodo)
+VALUES
+('Efectivo'),
+('Tarjeta de Crédito'),
+('Tarjeta de Débito'),
+('Transferencia Bancaria'),
+('MercadoPago'),
+('MODO'),
+('Cuenta Corriente'),
+('Pago QR');
+
+
+INSERT INTO Estado_Consulta (nombre)
+VALUES
+('Abierta'),
+('Respondida'),
+('Cerrada');
+
+
+INSERT INTO Tipo_Estado_Venta (nombre)
+VALUES
+('Pendiente'),
+('Confirmada'),
+('Preparada'),
+('Entregada'),
+('Anulada');
+
 INSERT INTO Categoria (nombre_categoria) VALUES 
 ('Filamento PLA'),
 ('Filamento ABS'),
