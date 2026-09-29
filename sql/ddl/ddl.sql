@@ -23,6 +23,26 @@ CREATE TABLE Estado_Consulta
   CONSTRAINT PK_EstadoConsulta PRIMARY KEY (id_estado_consulta)
 );
 
+CREATE TABLE Usuario (
+id_usuario INT IDENTITY (1,1) PRIMARY KEY,
+nombre VARCHAR (100) NOT NULL,
+contrasena VARCHAR (255) NOT NULL, 
+email VARCHAR (100) NOT NULL UNIQUE,
+id_rol INT NOT NULL,
+CONSTRAINT FK_Usuario_Rol FOREIGN KEY (id_rol) REFERENCES Rol (id_rol)
+);
+
+
+CREATE TABLE Cliente (
+dni_cliente VARCHAR (20) PRIMARY KEY, 
+nombre VARCHAR (100) NOT NULL,
+apellido VARCHAR (100) NOT NULL,
+telefono VARCHAR (20),
+correo_electronico VARCHAR (100),
+id_usuario INT,
+CONSTRAINT FK_Cliente_Usuario FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
+);
+
 CREATE TABLE Consulta
 (
   id_consulta INT IDENTITY(1,1) NOT NULL,
