@@ -66,7 +66,7 @@ CREATE TABLE Proveedor
 (
 	id_proveedor INT IDENTITY (1,1) NOT NULL,
 	contacto VARCHAR (100) NOT NULL,
-    CONSTRAINT Proveedor PRIMARY KEY (id_proveedor)
+   CONSTRAINT PK_Proveedor PRIMARY KEY (id_proveedor)
 );
 
 
