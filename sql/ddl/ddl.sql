@@ -71,6 +71,7 @@ CREATE TABLE Proveedor
 
 
 --Tablas dependientes
+
 CREATE TABLE Usuario 
 (
 	id_usuario INT IDENTITY (1,1) NOT NULL,
@@ -135,22 +136,6 @@ CREATE TABLE Producto
         REFERENCES Unidad_comercio(id_unidad)
 );
 
-CREATE TABLE Proveedor_producto
-(
-    id_proveedor INT NOT NULL,
-    codigo_producto INT NOT NULL,
-
-    CONSTRAINT PK_Proveedor_producto
-        PRIMARY KEY (id_proveedor, codigo_producto),
-
-    CONSTRAINT FK_ProveedorProducto_Proveedor
-        FOREIGN KEY (id_proveedor)
-        REFERENCES Proveedor(id_proveedor),
-
-    CONSTRAINT FK_ProveedorProducto_Producto
-        FOREIGN KEY (codigo_producto)
-        REFERENCES Producto(codigo_producto)
-);
 
 CREATE TABLE Venta
 (
@@ -177,19 +162,6 @@ CREATE TABLE Venta
         REFERENCES Metodo_Pago(id_metodo)
 );
 
-CREATE TABLE Detalle_Venta
-(
-    codigo_detalle INT IDENTITY(1,1) NOT NULL,
-    nro_comprobante INT NOT NULL,
-    codigo_producto INT NOT NULL,
-    cantidad DECIMAL(10,2) NOT NULL,
-    precio_unitario DECIMAL(12,2) NOT NULL,
-    CONSTRAINT PK_Detalle_Venta PRIMARY KEY (codigo_detalle),
-    CONSTRAINT FK_DetalleVenta_Venta FOREIGN KEY (nro_comprobante) REFERENCES Venta(nro_comprobante),
-    CONSTRAINT FK_DetalleVenta_Producto FOREIGN KEY (codigo_producto) REFERENCES Producto(codigo_producto),
-    CONSTRAINT CHK_DetalleVenta_Cantidad CHECK (cantidad > 0),
-    CONSTRAINT CHK_DetalleVenta_Precio CHECK (precio_unitario >= 0)
-);
 
 CREATE TABLE Movimiento_Stock
 (
@@ -217,3 +189,38 @@ CREATE TABLE Anulacion_Venta
     CONSTRAINT FK_AnulacionVenta_Venta FOREIGN KEY (nro_comprobante) REFERENCES Venta(nro_comprobante),
     CONSTRAINT FK_AnulacionVenta_Usuario FOREIGN KEY (id_usuario) REFERENCES Usuario(id_usuario)
 );
+
+--Tablas intermedias o de relacion 
+
+CREATE TABLE Proveedor_producto
+(
+    id_proveedor INT NOT NULL,
+    codigo_producto INT NOT NULL,
+
+    CONSTRAINT PK_Proveedor_producto
+        PRIMARY KEY (id_proveedor, codigo_producto),
+
+    CONSTRAINT FK_ProveedorProducto_Proveedor
+        FOREIGN KEY (id_proveedor)
+        REFERENCES Proveedor(id_proveedor),
+
+    CONSTRAINT FK_ProveedorProducto_Producto
+        FOREIGN KEY (codigo_producto)
+        REFERENCES Producto(codigo_producto)
+);
+
+CREATE TABLE Detalle_Venta
+(
+    codigo_detalle INT IDENTITY(1,1) NOT NULL,
+    nro_comprobante INT NOT NULL,
+    codigo_producto INT NOT NULL,
+    cantidad DECIMAL(10,2) NOT NULL,
+    precio_unitario DECIMAL(12,2) NOT NULL,
+    CONSTRAINT PK_Detalle_Venta PRIMARY KEY (codigo_detalle),
+    CONSTRAINT FK_DetalleVenta_Venta FOREIGN KEY (nro_comprobante) REFERENCES Venta(nro_comprobante),
+    CONSTRAINT FK_DetalleVenta_Producto FOREIGN KEY (codigo_producto) REFERENCES Producto(codigo_producto),
+    CONSTRAINT CHK_DetalleVenta_Cantidad CHECK (cantidad > 0),
+    CONSTRAINT CHK_DetalleVenta_Precio CHECK (precio_unitario >= 0)
+);
+
+
