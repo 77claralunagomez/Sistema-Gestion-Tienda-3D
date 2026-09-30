@@ -150,31 +150,24 @@ INSERT INTO Proveedor_producto (id_proveedor, codigo_producto) VALUES
 (6, 8);
  
 INSERT INTO Venta (fecha, id_estado_venta, importe, dni_cliente, id_metodo) VALUES
-('2026-09-01', 4, 49000.00, '35123456', 1),
-('2026-09-02', 4, 36000.00, '28987654', 2),
-('2026-09-03', 2, 32000.00, '40555123', 3),
-('2026-09-04', 3, 87500.00, '33444999', 1),
-('2026-09-05', 1, 17000.00, '18222333', 2),
-('2026-09-06', 4, 24500.00, '38777888', 4),
-('2026-09-07', 2, 46000.00, '42111000', 1),
-('2026-09-08', 5, 18500.00, '31666555', 3);
+('2026-09-01', 4, 49000.00, '20123456', 1),
+('2026-09-02', 4, 31500.00, '25654321', 2),
+('2026-09-03', 2, 32000.00, '30987654', 3),
+('2026-09-04', 3, 92500.00, '35111222', 1),
+('2026-09-05', 1, 64000.00, '40333444', 2),
+('2026-09-06', 4, 21000.00, '42555666', 4),
+('2026-09-07', 2, 94000.00, '28777888', 1),
+('2026-09-08', 5, 18500.00, '31999000', 3);
 
 INSERT INTO Detalle_Venta (nro_comprobante, codigo_producto, cantidad, precio_unitario) VALUES
 (1, 1, 2.00, 18500.00),
 (1, 3, 1.00, 12000.00),
-(2, 2, 1.50, 24000.00),
-(3, 4, 1.00, 32000.00),
-(4, 1, 5.00, 17500.00),
-(5, 5, 2.00, 8500.00),
-(6, 2, 1.00, 24500.00),
-(7, 3, 4.00, 11500.00);
+(2, 2, 1.50, 21000.00),
+(3, 5, 1.00, 32000.00),
+(4, 1, 5.00, 18500.00),
+(5, 5, 2.00, 32000.00),
+(6, 2, 1.00, 21000.00),
+(7, 3, 4.00, 23500.00);
 
 INSERT INTO Anulacion_Venta (nro_comprobante, motivo_anulacion, fecha_anulacion, id_usuario) VALUES
-(8, 'Cliente arrepentido antes del despacho', '2026-09-05 09:30:00', 1),
-(9, 'Error en el método de pago seleccionado', '2026-09-08 11:00:00', 2),
-(10, 'Falta de disponibilidad física del producto', '2026-09-10 14:15:00', 1),
-(11, 'Duplicación de comprobante por error de sistema', '2026-09-12 16:00:00', 3),
-(12, 'Cliente canceló por demora en la preparación', '2026-09-15 10:45:00', 2),
-(13, 'Carga incorrecta de los ítems en el detalle', '2026-09-18 17:30:00', 1),
-(14, 'Solicitud de cambio de datos de facturación', '2026-09-20 12:10:00', 3),
-(15, 'Producto cargado por error en la venta', '2026-09-22 18:00:00', 2);
+(8, 'Cliente arrepentido antes del despacho', '2026-09-08 19:30:00', 1);
