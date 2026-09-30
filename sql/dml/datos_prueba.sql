@@ -149,6 +149,15 @@ INSERT INTO Proveedor_producto (id_proveedor, codigo_producto) VALUES
 (3, 7),
 (6, 8);
  
+INSERT INTO Venta (fecha, id_estado_venta, importe, dni_cliente, id_metodo) VALUES
+('2026-09-01', 4, 49000.00, '35123456', 1),
+('2026-09-02', 4, 36000.00, '28987654', 2),
+('2026-09-03', 2, 32000.00, '40555123', 3),
+('2026-09-04', 3, 87500.00, '33444999', 1),
+('2026-09-05', 1, 17000.00, '18222333', 2),
+('2026-09-06', 4, 24500.00, '38777888', 4),
+('2026-09-07', 2, 46000.00, '42111000', 1),
+('2026-09-08', 5, 18500.00, '31666555', 3);
 
 INSERT INTO Detalle_Venta (nro_comprobante, codigo_producto, cantidad, precio_unitario) VALUES
 (1, 1, 2.00, 18500.00),
