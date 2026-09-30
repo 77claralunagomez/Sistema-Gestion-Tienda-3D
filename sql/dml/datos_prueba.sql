@@ -118,3 +118,33 @@ INSERT INTO Consulta (canal, fecha, dni_cliente, id_estado_consulta) VALUES
 ('WhatsApp', '2026-09-25', '42555666', 1),
 ('Correo', '2026-09-26', '28777888', 2),
 ('Página Web', '2026-09-27', '31999000', 3);
+
+INSERT INTO Detalle_Venta (nro_comprobante, codigo_producto, cantidad, precio_unitario) VALUES
+(1, 1, 2.00, 18500.00),
+(1, 3, 1.00, 12000.00),
+(2, 2, 1.50, 24000.00),
+(3, 4, 1.00, 32000.00),
+(4, 1, 5.00, 17500.00),
+(5, 5, 2.00, 8500.00),
+(6, 2, 1.00, 24500.00),
+(7, 3, 4.00, 11500.00);
+
+INSERT INTO Movimiento_Stock (fecha, cantidad, descripcion, codigo_producto, id_tipo_movimiento_stock) VALUES
+('2026-09-01 09:00:00', 50.00, 'Ingreso de stock inicial por proveedor', 1, 1),
+('2026-09-01 10:30:00', -2.00, 'Salida por venta directa', 1, 2),
+('2026-09-02 11:15:00', -1.50, 'Salida por venta directa', 2, 2),
+('2026-09-03 14:00:00', 20.00, 'Ingreso por compra a proveedor', 4, 1),
+('2026-09-04 16:45:00', -1.00, 'Salida por venta directa', 4, 2),
+('2026-09-05 10:00:00', 2.00, 'Reintegro por anulación de venta', 1, 4),
+('2026-09-06 12:20:00', -5.00, 'Salida por venta directa', 1, 2),
+('2026-09-07 15:10:00', -2.00, 'Salida por venta directa', 5, 2);
+
+INSERT INTO Anulacion_Venta (nro_comprobante, motivo_anulacion, fecha_anulacion, id_usuario) VALUES
+(8, 'Cliente arrepentido antes del despacho', '2026-09-05 09:30:00', 1),
+(9, 'Error en el método de pago seleccionado', '2026-09-08 11:00:00', 2),
+(10, 'Falta de disponibilidad física del producto', '2026-09-10 14:15:00', 1),
+(11, 'Duplicación de comprobante por error de sistema', '2026-09-12 16:00:00', 3),
+(12, 'Cliente canceló por demora en la preparación', '2026-09-15 10:45:00', 2),
+(13, 'Carga incorrecta de los ítems en el detalle', '2026-09-18 17:30:00', 1),
+(14, 'Solicitud de cambio de datos de facturación', '2026-09-20 12:10:00', 3),
+(15, 'Producto cargado por error en la venta', '2026-09-22 18:00:00', 2);
