@@ -47,9 +47,8 @@ WHERE V.fecha >= '2026-10-01'
 GROUP BY C.nombre_categoria 
 ORDER BY total_vendido DESC; 
 
-## 5. Resultados obtenidos
-
-La consulta se ejecutó correctamente en SQL Server Management Studio y produjo los siguientes resultados con los datos de prueba utilizados:
+5. Resultados obtenidos
+La consulta se ejecutó correctamente
 
 | Categoría           | Cantidad de ventas | Total vendido |
 | Filamento ABS       | 1                  | $44.000       |
