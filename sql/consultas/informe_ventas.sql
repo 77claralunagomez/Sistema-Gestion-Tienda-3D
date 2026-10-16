@@ -13,8 +13,8 @@ INNER JOIN Producto P
     ON DV.codigo_producto = P.codigo_producto
 INNER JOIN Categoria C
     ON P.codigo_categoria = C.codigo_categoria
-WHERE V.fecha >= '2026-10-01'
-  AND V.fecha < '2026-11-01'
+WHERE V.fecha >= '2026-09-01'
+  AND V.fecha < '2026-10-01'
   AND V.id_estado_venta = 4
 GROUP BY C.nombre_categoria
 ORDER BY total_vendido DESC;
