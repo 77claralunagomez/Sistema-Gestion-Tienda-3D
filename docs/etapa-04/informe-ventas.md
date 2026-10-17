@@ -1,27 +1,31 @@
-# Informe agregado de ventas por categorÌa
+# Informe agregado de ventas por categor√≠a
 
 ## 1. Objetivo
 
-Desarrollar y probar una consulta SQL que permita obtener un informe agregado de ventas por categorÌa de producto dentro de un rango de fechas determinado. La consulta calcula la cantidad de comprobantes diferentes y el importe total vendido por cada categorÌa, utilizando las funciones `COUNT()`, `SUM()` y `GROUP BY`.
+Desarrollar y probar una consulta SQL que permita obtener un informe agregado de ventas por categor√≠a de producto dentro de un rango de fechas determinado. La consulta calcula la cantidad de comprobantes diferentes y el importe total vendido por cada categor√≠a, utilizando las funciones `COUNT()`, `SUM()` y `GROUP BY`.
 
 ## 2. Tablas involucradas
 
 Para construir el informe se combinan las siguientes entidades del modelo relacional:
 
-- **Venta:** almacena los datos generales de la venta, incluyendo el n˙mero de comprobante, la fecha y el estado.
+- **Venta:** almacena los datos generales de la venta, incluyendo el n√∫mero de comprobante, la fecha y el estado.
 - **Detalle_Venta:** contiene los productos incluidos en cada comprobante, junto con sus cantidades y precios unitarios.
-- **Producto:** permite identificar los productos vendidos y la categorÌa a la que pertenecen.
-- **Categoria:** almacena los nombres de las categorÌas utilizadas para agrupar los resultados.
+- **Producto:** permite identificar los productos vendidos y la categor√≠a a la que pertenecen.
+- **Categoria:** almacena los nombres de las categor√≠as utilizadas para agrupar los resultados.
 
-## 3. LÛgica y explicaciÛn del script
+## 3. L√≥gica y explicaci√≥n del script
 
-- **Uniones (`INNER JOIN`):** relacionan las ventas con sus detalles, los productos vendidos y sus categorÌas mediante las claves correspondientes.
+- **Uniones (`INNER JOIN`):** relacionan las ventas con sus detalles, los productos vendidos y sus categor√≠as mediante las claves correspondientes.
 - **Filtro por fecha (`WHERE`):** selecciona las ventas realizadas desde el 1 de octubre hasta antes del 1 de noviembre de 2026.
-- **Filtro por estado:** se consideran ˙nicamente las ventas cuyo identificador de estado es `4`, correspondiente a *Entregada* en la base de datos utilizada para la prueba.
-- **Conteo de comprobantes (`COUNT(DISTINCT ...)`):** cuenta los n˙meros de comprobante diferentes que contienen productos de cada categorÌa, evitando contar varias veces un mismo comprobante dentro de una categorÌa.
-- **C·lculo del total (`SUM()`):** suma el resultado de multiplicar la cantidad por el precio unitario de cada producto vendido.
-- **AgrupaciÛn (`GROUP BY`):** agrupa los resultados por nombre de categorÌa para obtener un resumen de las ventas.
-- **Ordenamiento (`ORDER BY`):** presenta las categorÌas de mayor a menor importe vendido.
+- **Filtro por estado:** se consideran √∫nicamente las ventas cuyo identificador de estado es `4`, correspondiente a *Entregada* en la base de datos utilizada para la prueba.
+- **Conteo de comprobantes (`COUNT(DISTINCT ...)`):** cuenta los n√∫meros de comprobante diferentes que contienen productos de cada categor√≠a, evitando contar varias veces un mismo comprobante dentro de una categor√≠a.
+- **C√°lculo del total (`SUM()`):** suma el resultado de multiplicar la cantidad por el precio unitario de cada producto vendido.
+- **Agrupaci√≥n (`GROUP BY`):** agrupa los resultados por nombre de categor√≠a para obtener un resumen de las ventas.
+- **Ordenamiento (`ORDER BY`):** presenta las categor√≠as de mayor a menor importe vendido.
+  
+### Notas sobre las reglas de negocio aplicadas:
+- **Exclusi√≥n de ventas no concretadas:** Se filtra estrictamente por `id_estado_venta = 4` (Entregada) para no inflar la facturaci√≥n con comprobantes pendientes, cancelados o en proceso de preparaci√≥n.
+- **Precisi√≥n en conteo con `DISTINCT`:** El uso de `COUNT(DISTINCT V.nro_comprobante)` es clave porque una misma venta puede incluir varios productos de la misma categor√≠a; de no usar `DISTINCT`, se duplicar√≠a el conteo de ventas por categor√≠a.
 
 ## 4. Script SQL implementado
 
@@ -46,18 +50,22 @@ ORDER BY total_vendido DESC;
 
 ## 5. Resultados obtenidos
 
-La consulta se ejecutÛ correctamente en SQL Server Management Studio y produjo los siguientes resultados con los datos de prueba utilizados:
+La consulta se ejecut√≥ correctamente en SQL Server Management Studio y produjo los siguientes resultados con los datos de prueba utilizados:
 
-| CategorÌa | Cantidad de ventas | Total vendido |
+| Categor√≠a | Cantidad de ventas | Total vendido |
 |---|---:|---:|
 | Filamento ABS | 1 | $44.000 |
 | Resinas SLA | 1 | $35.000 |
 | Filamento PLA | 1 | $18.000 |
-| Repuestos mec·nicos | 2 | $13.500 |
+| Repuestos mec√°nicos | 2 | $13.500 |
 | Herramientas de post-procesamiento | 2 | $7.500 |
 
 Los resultados corresponden a las ventas entregadas durante octubre de 2026. Los importes se calcularon a partir de los detalles de cada comprobante.
 
-## 6. ConclusiÛn
+### An√°lisis de los resultados:
+- **L√≠nea de mayor ingreso:** La categor√≠a *Filamento ABS* registra el mayor volumen de facturaci√≥n ($44.000) pese a contar con una sola venta registrada en el per√≠odo.
+- **L√≠neas de mayor rotaci√≥n:** Las categor√≠as *Repuestos mec√°nicos* y *Herramientas de post-procesamiento* lideran en cantidad de operaciones (2 ventas cada una), indicando una alta frecuencia de demanda de insumos secundarios.
 
-La consulta permite resumir las ventas entregadas por categorÌa de producto durante un perÌodo determinado. Mediante las funciones de agregaciÛn y agrupaciÛn se obtiene la cantidad de comprobantes diferentes y el importe total vendido por categorÌa, facilitando el an·lisis comercial de la tienda.
+## 6. Conclusi√≥n
+
+La consulta permite resumir las ventas entregadas por categor√≠a de producto durante un per√≠odo determinado. Mediante las funciones de agregaci√≥n y agrupaci√≥n se obtiene la cantidad de comprobantes diferentes y el importe total vendido por categor√≠a, facilitando el an√°lisis comercial de la tienda.
