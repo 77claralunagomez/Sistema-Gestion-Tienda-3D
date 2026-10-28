@@ -1,42 +1,67 @@
-# Justificación del Manejo de Transacciones
+# Manejo de Transacciones en SQL Server Express
 
-Este documento detalla la implementación, importancia y justificación técnica del manejo de transacciones en la **Tienda3D** (Sistema de Gestión de Ventas e Inventario para Tienda de Insumos de Impresión 3D).
-
----
-
-## 1. Concepto y Justificación en el Dominio del Negocio
-
-Una **transacción** es un conjunto de instrucciones SQL (`INSERT`, `UPDATE`, `DELETE`) que el motor de base de datos ejecuta como una **única unidad lógica de trabajo**.
-
-En la **Tienda3D**, una venta no consiste en una única acción aislada; involucra múltiples modificaciones operativas críticas:
-1. Verificación e inserción de la cabecera en la tabla `Venta`.
-2. Inserción de las líneas de productos vendidos en `Detalle_Venta`.
-3. Descuento físico de unidades/gramos en la tabla `Producto`.
-4. Registro del comprobante de movimiento en `Movimiento_Stock`.
-
-Si alguna de estas operaciones falla a mitad de camino (por ejemplo, falta de stock suficiente de filamento/resina o una falla de conexión en el servidor), la base de datos no puede quedar en un estado inconsistente (como haber creado la venta sin descontar el stock, o descontar el stock sin generar el comprobante). 
-
-El uso de transacciones garantiza que **o se completan exitosamente todas las operaciones (`COMMIT`), o se revierten absolutamente todos los cambios parciales (`ROLLBACK`)**.
+**Sistema:** Tienda3D (Sistema de Gestión de Ventas e Inventario para Tienda de Insumos de Impresión 3D)  
+**Módulo:** Etapa V — Temas Técnicos Avanzados  
 
 ---
 
-## 2. Garantía de las Propiedades ACID
+## 1. Definición y Objetivo
 
-La implementación transaccional en SQL Server asegura las cuatro propiedades fundamentales para la Tienda3D:
+Una **transacción** es un conjunto de sentencias SQL (`INSERT`, `UPDATE`, `DELETE`) que el motor de base de datos ejecuta como una **única unidad lógica de trabajo**[cite: 4, 20]. 
 
-* **Atomicidad (All or Nothing):** Garantiza que la venta, el detalle, la actualización de stock y el registro de movimiento se ejecuten como un todo indivisible. Si falla el descuento de stock, se aplica un `ROLLBACK` y se revierte la inserción de la venta.
-* **Consistencia:** La base de datos pasa de un estado válido a otro estado válido. Se respetan las restricciones de integridad (`CHECK`, `FOREIGN KEY`), asegurando que el stock de un producto nunca quede por debajo de cero (`stock >= 0`).
-* **Aislamiento (Isolation):** Si dos vendedores registran ventas de filamento simultáneamente desde diferentes terminales, las transacciones se ejecutan de manera aislada para evitar "lecturas sucias" o modificaciones concurrentes sobre el mismo stock.
-* **Durabilidad:** Una vez que la transacción confirma sus cambios con `COMMIT TRANSACTION`, la venta y el descuento de inventario persisten de forma permanente en el disco del servidor, incluso si ocurre una falla eléctrica inmediatamente después.
+El **objetivo principal** del manejo de transacciones es garantizar la integridad absoluta de los datos mediante las propiedades **ACID**:
+* **Atomicidad (All or Nothing):** O se ejecutan con éxito todas las operaciones de la transacción (`COMMIT`), o se deshacen por completo sus efectos (`ROLLBACK`) si ocurre algún fallo[cite: 4, 20].
+* **Consistencia:** La base de datos pasa de un estado válido a otro estado válido, respetando todas las restricciones de integridad (`PRIMARY KEY`, `FOREIGN KEY`, `CHECK`)[cite: 4].
+* **Aislamiento (Isolation):** Las operaciones dentro de una transacción son invisibles para otras transacciones concurrentes hasta que se confirmen[cite: 4].
+* **Durabilidad:** Una vez que la transacción confirma sus cambios con `COMMIT`, los datos persisten de forma permanente en el disco[cite: 4].
 
 ---
 
-## 3. Implementación Técnica en SQL Server
+## 2. Ventajas y Aplicaciones
 
-A continuación se presenta el procedimiento almacenado transaccional `dbo.sp_RegistrarVenta3D` que centraliza la lógica operativa aplicando bloques `BEGIN TRANSACTION`, `TRY...CATCH`, `COMMIT` y `ROLLBACK`.
+En un sistema de gestión comercial como **Tienda3D**, una operación como la venta de filamentos, resinas o repuestos no es un evento aislado, sino un proceso compuesto por múltiples pasos interrelacionados:
+1. Verificación e inserción de la cabecera en la tabla `Venta`[cite: 20].
+2. Inserción de las líneas de artículos vendidos en `Detalle_Venta`[cite: 20].
+3. Descuento físico de unidades o kilogramos en la tabla `Producto`[cite: 20].
+4. Registro del comprobante de egreso en `Movimiento_Stock`[cite: 20].
+
+### Ventajas clave de aplicar transacciones:
+* **Previene inconsistencias y datos "fantasma":** Evita que una venta quede registrada en el sistema si por alguna razón falla el descuento de stock o la conexión del servidor[cite: 4, 20].
+* **Control de concurrencia:** Protege el inventario frente a compras simultáneas realizadas desde diferentes terminales o por la tienda web.
+* **Recuperación ante errores:** Permite atrapar cualquier excepción en el bloque `CATCH` y revertir automáticamente todos los cambios parciales con `ROLLBACK TRANSACTION`[cite: 4, 20].
+
+---
+
+## 3. Implementación en SQL Server Express
+
+En SQL Server Express, las transacciones explícitas se gestionan mediante las siguientes sentencias T-SQL combinadas con estructuras de control de errores `BEGIN TRY ... BEGIN CATCH`:
+
+* `BEGIN TRANSACTION:` Inicia formalmente el bloque de la unidad lógica de trabajo[cite: 20].
+* `COMMIT TRANSACTION:` Confirma definitivamente todos los cambios realizados durante la transacción[cite: 20].
+* `ROLLBACK TRANSACTION:` Deshace todas las operaciones realizadas desde el inicio de la transacción si se detecta un error o falta de stock[cite: 4, 20].
+* `@@TRANCOUNT:` Variable del sistema que permite verificar si existe una transacción activa antes de ejecutar un `ROLLBACK`[cite: 20].
+
+---
+
+## 4. Caso Concreto Aplicado al Sistema de Ventas de Tienda3D
+
+En el dominio de la **Tienda3D**, si un cliente adquiere bobinas de filamento PLA, el procedimiento almacenado `sp_RegistrarVenta3D` toma el control transaccional:
+1. Evalúa si el `stock` del producto es mayor o igual a la cantidad solicitada[cite: 20].
+2. Si el stock es insuficiente o el producto no existe, interrumpe la ejecución mediante `RAISERROR` enviando el flujo directamente al bloque `CATCH`[cite: 20].
+3. En el bloque `CATCH`, se ejecuta `ROLLBACK TRANSACTION`, anulando cualquier inserción parcial realizada en `Venta` o `Detalle_Venta`, manteniendo la consistencia del catálogo[cite: 4, 20].
+
+---
+
+## 5. Script de Demostración y Resultados Obtenidos
+
+### A. Script SQL de Implementación
 
 ```sql
 USE Tienda3D;
+GO
+
+IF OBJECT_ID('dbo.sp_RegistrarVenta3D', 'P') IS NOT NULL
+    DROP PROCEDURE dbo.sp_RegistrarVenta3D;
 GO
 
 CREATE PROCEDURE dbo.sp_RegistrarVenta3D
