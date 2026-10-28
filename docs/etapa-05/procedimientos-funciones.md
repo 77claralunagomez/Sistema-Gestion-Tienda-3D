@@ -2,7 +2,7 @@
 
 ## 1. Objetivo
 
-Implementar y probar procedimientos almacenados y funciones definidas por el usuario en SQL Server, aplicados a operaciones frecuentes del sistema *Tienda3D*. Se busca reutilizar lÛgica, validar datos y centralizar c·lculos relacionados con productos, ventas y clientes.
+Implementar y probar procedimientos almacenados y funciones definidas por el usuario en SQL Server, aplicados a operaciones frecuentes del sistema *Tienda3D*. Se busca reutilizar l√≥gica, validar datos y centralizar c√°lculos relacionados con productos, ventas y clientes.
 
 ## 2. Objetos SQL implementados
 
@@ -12,31 +12,31 @@ Un procedimiento almacenado es un conjunto de instrucciones SQL guardado en la b
 
 | Procedimiento | Objetivo | Validaciones y comportamiento |
 |---|---|---|
-| `dbo.sp_InsertarProducto` | Insertar un producto nuevo. | Recibe descripciÛn, precio, nombre, stock y las claves de categorÌa, marca y unidad. El cÛdigo se genera autom·ticamente. Rechaza precios y stocks negativos. |
-| `dbo.sp_ModificarProducto` | Modificar el precio y el stock de un producto. | Valida que precio y stock no sean negativos y que el cÛdigo del producto exista. |
+| `dbo.sp_InsertarProducto` | Insertar un producto nuevo. | Recibe descripci√≥n, precio, nombre, stock y las claves de categor√≠a, marca y unidad. El c√≥digo se genera autom√°ticamente. Rechaza precios y stocks negativos. |
+| `dbo.sp_ModificarProducto` | Modificar el precio y el stock de un producto. | Valida que precio y stock no sean negativos y que el c√≥digo del producto exista. |
 | `dbo.sp_EliminarProducto` | Eliminar un producto existente. | Comprueba que el producto exista antes de eliminarlo. Las pruebas se hicieron con productos temporales sin registros relacionados. |
 
 ### 2.2. Funciones definidas por el usuario
 
-Una funciÛn definida por el usuario encapsula un c·lculo o una consulta y devuelve un valor. Se implementaron tres funciones escalares.
+Una funci√≥n definida por el usuario encapsula un c√°lculo o una consulta y devuelve un valor. Se implementaron tres funciones escalares.
 
-| FunciÛn | Objetivo | Comportamiento |
+| Funci√≥n | Objetivo | Comportamiento |
 |---|---|---|
 | `dbo.CalcularTotalComprasCliente(@DniCliente)` | Calcular el total de compras de un cliente. | Suma `Venta.importe`; devuelve cero si el cliente no tiene ventas. |
-| `dbo.CalcularDescuento(@DniCliente)` | Calcular la tasa de descuento seg˙n el total de compras. | Devuelve `0.10` si el total supera $500.000; `0.05` si supera $200.000; de lo contrario, `0.00`. |
-| `dbo.CalcularImporteVenta(@PrecioUnitario, @Cantidad)` | Calcular el importe de una venta. | Multiplica el precio unitario por la cantidad; devuelve `NULL` si alguno de los par·metros es negativo. |
+| `dbo.CalcularDescuento(@DniCliente)` | Calcular la tasa de descuento seg√∫n el total de compras. | Devuelve `0.10` si el total supera $500.000; `0.05` si supera $200.000; de lo contrario, `0.00`. |
+| `dbo.CalcularImporteVenta(@PrecioUnitario, @Cantidad)` | Calcular el importe de una venta. | Multiplica el precio unitario por la cantidad; devuelve `NULL` si alguno de los par√°metros es negativo. |
 
 **Nota:** `CalcularDescuento` utiliza `Venta.importe`, es decir, los importes finales guardados en la tabla.
 
-## 3. AplicaciÛn en Tienda3D
+## 3. Aplicaci√≥n en Tienda3D
 
-- **ReutilizaciÛn:** los procedimientos guardan la lÛgica de inserciÛn, modificaciÛn y eliminaciÛn para ejecutarla de forma consistente.
-- **ValidaciÛn:** se impide ingresar precios o stocks negativos y se verifica la existencia del producto antes de modificarlo.
-- **C·lculos centralizados:** las funciones permiten obtener el total de compras, calcular descuentos y calcular importes.
-- **Mantenimiento:** centralizar reglas y c·lculos reduce la duplicaciÛn de lÛgica.
-- **Permisos:** SQL Server permite conceder permisos de ejecuciÛn sobre procedimientos sin dar acceso directo a todas las tablas, si la seguridad se configura adecuadamente.
+- **Reutilizaci√≥n:** los procedimientos guardan la l√≥gica de inserci√≥n, modificaci√≥n y eliminaci√≥n para ejecutarla de forma consistente.
+- **Validaci√≥n:** se impide ingresar precios o stocks negativos y se verifica la existencia del producto antes de modificarlo.
+- **C√°lculos centralizados:** las funciones permiten obtener el total de compras, calcular descuentos y calcular importes.
+- **Mantenimiento:** centralizar reglas y c√°lculos reduce la duplicaci√≥n de l√≥gica.
+- **Permisos:** SQL Server permite conceder permisos de ejecuci√≥n sobre procedimientos sin dar acceso directo a todas las tablas, si la seguridad se configura adecuadamente.
 
-## 4. OrganizaciÛn de los scripts SQL
+## 4. Organizaci√≥n de los scripts SQL
 
 Los scripts se organizan en el repositorio en las siguientes carpetas.
 
@@ -44,53 +44,53 @@ Los scripts se organizan en el repositorio en las siguientes carpetas.
 
 Ruta: `sql/tecnico/procedimientos/`
 
-| Archivo | DescripciÛn |
+| Archivo | Descripci√≥n |
 |---|---|
-| `sp_InsertarProducto.sql` | CreaciÛn del procedimiento de inserciÛn. |
-| `sp_ModificarProducto.sql` | CreaciÛn del procedimiento de modificaciÛn. |
-| `sp_EliminarProducto.sql` | CreaciÛn del procedimiento de eliminaciÛn. |
+| `sp_InsertarProducto.sql` | Creaci√≥n del procedimiento de inserci√≥n. |
+| `sp_ModificarProducto.sql` | Creaci√≥n del procedimiento de modificaci√≥n. |
+| `sp_EliminarProducto.sql` | Creaci√≥n del procedimiento de eliminaci√≥n. |
 | `Pruebas_Procedimientos.sql` | Pruebas funcionales de los procedimientos. |
-| `Benchmark_Inserciones.sql` | MediciÛn comparativa de inserciones. |
+| `Benchmark_Inserciones.sql` | Medici√≥n comparativa de inserciones. |
 
 ### 4.2. Funciones
 
 Ruta: `sql/tecnico/funciones/`
 
-| Archivo | DescripciÛn |
+| Archivo | Descripci√≥n |
 |---|---|
-| `CalcularTotalComprasCliente.sql` | CreaciÛn de la funciÛn de total de compras. |
-| `CalcularImporteVenta.sql` | CreaciÛn de la funciÛn de c·lculo de importe. |
-| `CalcularDescuento.sql` | CreaciÛn de la funciÛn de descuento. |
+| `CalcularTotalComprasCliente.sql` | Creaci√≥n de la funci√≥n de total de compras. |
+| `CalcularImporteVenta.sql` | Creaci√≥n de la funci√≥n de c√°lculo de importe. |
+| `CalcularDescuento.sql` | Creaci√≥n de la funci√≥n de descuento. |
 | `Pruebas_Funciones.sql` | Pruebas de las funciones. |
-| `Benchmark_Funcion_Importe.sql` | ComparaciÛn del c·lculo directo frente a la funciÛn escalar. |
+| `Benchmark_Funcion_Importe.sql` | Comparaci√≥n del c√°lculo directo frente a la funci√≥n escalar. |
 
 ## 5. Pruebas funcionales de los procedimientos
 
-### 5.1. InserciÛn directa
+### 5.1. Inserci√≥n directa
 
-Se insertaron tres productos temporales mediante una ˙nica sentencia `INSERT` directa. Los cÛdigos generados fueron 7, 8 y 9. Se verificaron sus nombres, precios y stocks.
+Se insertaron tres productos temporales mediante una √∫nica sentencia `INSERT` directa. Los c√≥digos generados fueron 7, 8 y 9. Se verificaron sus nombres, precios y stocks.
 
-### 5.2. InserciÛn mediante procedimiento
+### 5.2. Inserci√≥n mediante procedimiento
 
-Se insertaron tres productos mediante `dbo.sp_InsertarProducto`. Los cÛdigos generados fueron 10, 11 y 12. El procedimiento devolviÛ el mensaje de inserciÛn correcta para cada producto.
+Se insertaron tres productos mediante `dbo.sp_InsertarProducto`. Los c√≥digos generados fueron 10, 11 y 12. El procedimiento devolvi√≥ el mensaje de inserci√≥n correcta para cada producto.
 
-### 5.3. ModificaciÛn mediante procedimiento
+### 5.3. Modificaci√≥n mediante procedimiento
 
 Los productos insertados mediante el procedimiento se modificaron con `dbo.sp_ModificarProducto`. Los valores finales fueron:
 
-| CÛdigo | Producto de prueba | Precio final | Stock final |
+| C√≥digo | Producto de prueba | Precio final | Stock final |
 |---:|---|---:|---:|
 | 10 | Prueba procedimiento Etapa V A | $19.000,00 | 6 |
 | 11 | Prueba procedimiento Etapa V B | $23.000,00 | 5 |
 | 12 | Prueba procedimiento Etapa V C | $26.000,00 | 4 |
 
-### 5.4. EliminaciÛn mediante procedimiento
+### 5.4. Eliminaci√≥n mediante procedimiento
 
-Los productos 10, 11 y 12 se eliminaron mediante `dbo.sp_EliminarProducto`. La consulta posterior no devolviÛ filas para esos cÛdigos. Antes de eliminarlos se comprobÛ que no tuvieran registros relacionados en `Detalle_Venta`, `Movimiento_Stock` ni `Proveedor_producto`.
+Los productos 10, 11 y 12 se eliminaron mediante `dbo.sp_EliminarProducto`. La consulta posterior no devolvi√≥ filas para esos c√≥digos. Antes de eliminarlos se comprob√≥ que no tuvieran registros relacionados en `Detalle_Venta`, `Movimiento_Stock` ni `Proveedor_producto`.
 
 ### 5.5. Prueba transaccional
 
-Se ejecutÛ una prueba de inserciÛn, modificaciÛn y eliminaciÛn de un producto temporal dentro de una transacciÛn que finalizÛ con `ROLLBACK`. Se observaron los resultados de cada operaciÛn y luego se deshicieron los cambios, por lo que el producto temporal no quedÛ guardado.
+Se ejecut√≥ una prueba de inserci√≥n, modificaci√≥n y eliminaci√≥n de un producto temporal dentro de una transacci√≥n que finaliz√≥ con `ROLLBACK`. Se observaron los resultados de cada operaci√≥n y luego se deshicieron los cambios, por lo que el producto temporal no qued√≥ guardado.
 
 ## 6. Resultados de las funciones
 
@@ -111,16 +111,16 @@ Resultados obtenidos al ejecutar las funciones sobre los clientes de prueba:
 
 Los clientes consultados obtuvieron un descuento del 0 % porque sus totales no alcanzaban los umbrales establecidos.
 
-### 6.2. C·lculo del importe de venta
+### 6.2. C√°lculo del importe de venta
 
 | Precio unitario | Cantidad | Importe calculado |
 |---:|---:|---:|
 | $18.000,00 | 2 | $36.000,00 |
 | $2.500,00 | 4 | $10.000,00 |
 
-Ambos resultados coinciden con el c·lculo esperado.
+Ambos resultados coinciden con el c√°lculo esperado.
 
-### 6.3. VerificaciÛn de los umbrales de descuento
+### 6.3. Verificaci√≥n de los umbrales de descuento
 
 | Total de compras | Descuento esperado | Resultado obtenido |
 |---:|---:|---:|
@@ -129,9 +129,9 @@ Ambos resultados coinciden con el c·lculo esperado.
 
 Las pruebas controladas verificaron los dos niveles de descuento adicionales. Las ventas ficticias se revirtieron mediante `ROLLBACK`.
 
-## 7. ComparaciÛn de rendimiento
+## 7. Comparaci√≥n de rendimiento
 
-Los tiempos se midieron en microsegundos y corresponden a ejecuciones concretas. Pueden variar seg˙n las condiciones del sistema, el plan de ejecuciÛn y la versiÛn de SQL Server.
+Los tiempos se midieron en microsegundos y corresponden a ejecuciones concretas. Pueden variar seg√∫n las condiciones del sistema, el plan de ejecuci√≥n y la versi√≥n de SQL Server.
 
 ### 7.1. Inserciones directas frente a procedimiento auxiliar
 
@@ -140,40 +140,38 @@ Los tiempos se midieron en microsegundos y corresponden a ejecuciones concretas.
 | `INSERT` directo: 1.000 registros en una sentencia | 343.443 microsegundos |
 | Procedimiento auxiliar: 1.000 llamadas individuales | 322.693 microsegundos |
 
-En esta ejecuciÛn, las llamadas al procedimiento auxiliar registraron aproximadamente un 6,0 % menos de tiempo. Sin embargo, las pruebas no son estrictamente equivalentes: una realiza una inserciÛn por lote y la otra ejecuta 1.000 llamadas individuales. Adem·s, el procedimiento auxiliar de benchmark no incluye todas las validaciones de `dbo.sp_InsertarProducto`. Por lo tanto, el resultado no demuestra que los procedimientos almacenados sean siempre m·s r·pidos.
+En esta ejecuci√≥n, las llamadas al procedimiento auxiliar registraron aproximadamente un 6,0 % menos de tiempo. Sin embargo, las pruebas no son estrictamente equivalentes: una realiza una inserci√≥n por lote y la otra ejecuta 1.000 llamadas individuales. Adem√°s, el procedimiento auxiliar de benchmark no incluye todas las validaciones de `dbo.sp_InsertarProducto`. Por lo tanto, el resultado no demuestra que los procedimientos almacenados sean siempre m√°s r√°pidos.
 
-### 7.2. MultiplicaciÛn directa frente a funciÛn escalar
+### 7.2. Multiplicaci√≥n directa frente a funci√≥n escalar
 
 | Prueba | Tiempo medido |
 |---|---:|
-| MultiplicaciÛn directa: 100.000 operaciones | 203.129 microsegundos |
+| Multiplicaci√≥n directa: 100.000 operaciones | 203.129 microsegundos |
 | `dbo.CalcularImporteVenta`: 100.000 operaciones | 1.043.264 microsegundos |
 
-En esta ejecuciÛn, la funciÛn escalar tardÛ aproximadamente 5,14 veces m·s que la multiplicaciÛn directa. Para una operaciÛn aritmÈtica simple y repetida, la llamada a una funciÛn puede agregar costo. Las funciones siguen siendo ˙tiles para centralizar la lÛgica y mantener consistencia.
+En esta ejecuci√≥n, la funci√≥n escalar tard√≥ aproximadamente 5,14 veces m√°s que la multiplicaci√≥n directa. Para una operaci√≥n aritm√©tica simple y repetida, la llamada a una funci√≥n puede agregar costo. Las funciones siguen siendo √∫tiles para centralizar la l√≥gica y mantener consistencia.
 
 ## 8. Ventajas y aplicaciones
 
-- **ReutilizaciÛn:** la lÛgica se define una vez y se ejecuta cuando es necesaria.
-- **ValidaciÛn:** los procedimientos controlan valores negativos y existencia de productos.
-- **Consistencia:** las funciones centralizan c·lculos de importes, totales y descuentos.
+- **Reutilizaci√≥n:** la l√≥gica se define una vez y se ejecuta cuando es necesaria.
+- **Validaci√≥n:** los procedimientos controlan valores negativos y existencia de productos.
+- **Consistencia:** las funciones centralizan c√°lculos de importes, totales y descuentos.
 - **Mantenimiento:** los cambios en las reglas pueden realizarse en los objetos correspondientes, en lugar de duplicarse en muchas consultas.
 
 ## 9. Conclusiones
 
 Se implementaron y probaron tres procedimientos almacenados para insertar, modificar y eliminar productos, junto con tres funciones para calcular el total de compras, la tasa de descuento y el importe de venta. Las pruebas funcionales mostraron los resultados esperados, incluidos los casos de descuento del 0 %, 5 % y 10 %.
 
-Las mediciones muestran que el rendimiento depende del tipo de operaciÛn y de cÛmo se diseÒe la comparaciÛn. La funciÛn escalar fue m·s lenta que la multiplicaciÛn directa en la prueba realizada. La comparaciÛn de inserciones no fue equivalente, por lo que debe interpretarse con cautela.
+Las mediciones muestran que el rendimiento depende del tipo de operaci√≥n y de c√≥mo se dise√±e la comparaci√≥n. La funci√≥n escalar fue m√°s lenta que la multiplicaci√≥n directa en la prueba realizada. La comparaci√≥n de inserciones no fue equivalente, por lo que debe interpretarse con cautela.
 
-En conjunto, los procedimientos y funciones aportan reutilizaciÛn, validaciÛn y mantenimiento de la lÛgica del sistema. Su impacto en el rendimiento debe evaluarse mediante pruebas controladas y comparables.
+En conjunto, los procedimientos y funciones aportan reutilizaci√≥n, validaci√≥n y mantenimiento de la l√≥gica del sistema. Su impacto en el rendimiento debe evaluarse mediante pruebas controladas y comparables.
 
-## 10. Evidencias de ejecuciÛn
+## 10. Evidencias de ejecuci√≥n
 
 Las capturas de SQL Server Management Studio documentan:
 
 1. La existencia de los tres procedimientos almacenados y las tres funciones.
 2. Los resultados de las funciones de total de compras, descuentos e importes.
-3. La inserciÛn, modificaciÛn y eliminaciÛn de un producto temporal.
-4. La verificaciÛn de los descuentos del 5 % y del 10 %.
+3. La inserci√≥n, modificaci√≥n y eliminaci√≥n de un producto temporal.
+4. La verificaci√≥n de los descuentos del 5 % y del 10 %.
 5. Los resultados de las dos pruebas de rendimiento.
-
-Las capturas correspondientes se incluyen en el informe complementario de la Etapa V.
