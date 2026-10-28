@@ -1,3 +1,4 @@
+
 USE Tienda3D;
 GO
 
@@ -13,11 +14,11 @@ AS
 BEGIN
     SET NOCOUNT ON;
 
-    IF @precio < 0
-        THROW 50010, 'El precio no puede ser negativo.', 1;
+    IF @precio IS NULL OR @precio <= 0
+        THROW 50010, 'El precio debe ser mayor que cero.', 1;
 
-    IF @stock < 0
-        THROW 50011, 'El stock no puede ser negativo.', 1;
+    IF @stock IS NULL OR @stock < 0
+        THROW 50011, 'El stock no puede ser negativo ni nulo.', 1;
 
     INSERT INTO dbo.Producto
         (descripcion, precio, nombre, stock,

@@ -13,7 +13,8 @@ BEGIN
 
     SELECT @TotalAcumulado = COALESCE(SUM(importe), 0)
     FROM dbo.Venta
-    WHERE dni_cliente = @DniCliente;
+    WHERE dni_cliente = @DniCliente
+      AND id_estado_venta IN (2, 3, 4);
 
     IF @TotalAcumulado > 500000
         SET @Descuento = 0.10;
