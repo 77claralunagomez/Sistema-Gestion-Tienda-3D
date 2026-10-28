@@ -12,6 +12,7 @@ BEGIN
         fecha_hora, usuario, codigo_producto, nombre_producto,
         precio_anterior, precio_nuevo, stock_anterior, stock_nuevo, tipo_operacion
     )
+        
     SELECT 
         SYSDATETIME(),
         SYSTEM_USER,
