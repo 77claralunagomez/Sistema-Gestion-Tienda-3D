@@ -3,7 +3,7 @@ GO
 
 SET NOCOUNT ON;
 
--- 1. Inserción de prueba
+-- 1 Inserción de prueba
 INSERT INTO dbo.Producto (
     descripcion, precio, nombre, stock, codigo_categoria, id_marca, id_unidad
 )
@@ -14,17 +14,17 @@ VALUES (
 
 DECLARE @IdPrueba INT = SCOPE_IDENTITY();
 
--- 2. Prueba de modificación (dispara trg_Auditoria_Producto_Update)
+-- 2 Prueba de modificación (dispara trg_Auditoria_Producto_Update)
 EXEC dbo.sp_ModificarProducto 
     @codigo_producto = @IdPrueba, 
     @precio = 21000.00, 
     @stock = 15;
 
--- 3. Prueba de eliminación (dispara trg_Auditoria_Producto_Delete)
+-- 3 Prueba de eliminación (dispara trg_Auditoria_Producto_Delete)
 EXEC dbo.sp_EliminarProducto 
     @codigo_producto = @IdPrueba;
 
--- 4. Verificación del resultado final
+-- 4 Verificación del resultado final
 SELECT 
     id_auditoria,
     fecha_hora,
