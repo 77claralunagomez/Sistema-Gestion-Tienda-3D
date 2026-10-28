@@ -17,4 +17,5 @@ CREATE TABLE dbo.Auditoria_Producto (
     stock_nuevo INT NULL,
     tipo_operacion VARCHAR(20) NOT NULL
 );
+
 GO
