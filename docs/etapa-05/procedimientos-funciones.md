@@ -1,4 +1,4 @@
-# Procedimientos Almacenados y Funciones
+﻿# Procedimientos Almacenados y Funciones
 
 ## 1. Objetivo
 
@@ -12,8 +12,8 @@ Un procedimiento almacenado es un conjunto de instrucciones SQL guardado en la b
 
 | Procedimiento | Objetivo | Validaciones y comportamiento |
 |---|---|---|
-| `dbo.sp_InsertarProducto` | Insertar un producto nuevo. | Recibe descripción, precio, nombre, stock y las claves de categoría, marca y unidad. El código se genera automáticamente. Rechaza precios y stocks negativos. |
-| `dbo.sp_ModificarProducto` | Modificar el precio y el stock de un producto. | Valida que precio y stock no sean negativos y que el código del producto exista. |
+| `dbo.sp_InsertarProducto` | Insertar un producto nuevo. | Recibe descripción, precio, nombre, stock y las claves de categoría, marca y unidad. El código se genera automáticamente. Rechaza precios nulos o menores o iguales a cero y stocks nulos o negativos. |
+| `dbo.sp_ModificarProducto` | Modificar el precio y el stock de un producto. | Valida que el precio sea mayor que cero, que el stock no sea nulo ni negativo y que el producto exista. |
 | `dbo.sp_EliminarProducto` | Eliminar un producto existente. | Comprueba que el producto exista antes de eliminarlo. Las pruebas se hicieron con productos temporales sin registros relacionados. |
 
 ### 2.2. Funciones definidas por el usuario
@@ -22,17 +22,18 @@ Una función definida por el usuario encapsula un cálculo o una consulta y devu
 
 | Función | Objetivo | Comportamiento |
 |---|---|---|
-| `dbo.CalcularTotalComprasCliente(@DniCliente)` | Calcular el total de compras de un cliente. | Suma `Venta.importe`; devuelve cero si el cliente no tiene ventas. |
-| `dbo.CalcularDescuento(@DniCliente)` | Calcular la tasa de descuento según el total de compras. | Devuelve `0.10` si el total supera $500.000; `0.05` si supera $200.000; de lo contrario, `0.00`. |
+| `dbo.CalcularTotalComprasCliente(@DniCliente)` | Calcular el total de compras de un cliente. | Suma los importes de las ventas confirmadas, preparadas y entregadas. Excluye las pendientes y anuladas. Devuelve cero si no hay ventas que cumplan el criterio. |
+| `dbo.CalcularDescuento(@DniCliente)` | Calcular la tasa de descuento según el total de compras. | Considera los mismos estados de venta que la función anterior. Devuelve `0.10` si el total supera $500.000; `0.05` si supera $200.000; de lo contrario, `0.00`. |
 | `dbo.CalcularImporteVenta(@PrecioUnitario, @Cantidad)` | Calcular el importe de una venta. | Multiplica el precio unitario por la cantidad; devuelve `NULL` si alguno de los parámetros es negativo. |
 
-**Nota:** `CalcularDescuento` utiliza `Venta.importe`, es decir, los importes finales guardados en la tabla.
+**Nota:** las funciones `CalcularTotalComprasCliente` y `CalcularDescuento` utilizan `Venta.importe`, es decir, los importes finales guardados en la tabla. Ambas consideran únicamente las ventas con estado Confirmada (2), Preparada (3) o Entregada (4).
 
 ## 3. Aplicación en Tienda3D
 
 - **Reutilización:** los procedimientos guardan la lógica de inserción, modificación y eliminación para ejecutarla de forma consistente.
-- **Validación:** se impide ingresar precios o stocks negativos y se verifica la existencia del producto antes de modificarlo.
+- **Validación:** se impide ingresar precios nulos o menores o iguales a cero y stocks nulos o negativos. También se verifica la existencia del producto antes de modificarlo o eliminarlo.
 - **Cálculos centralizados:** las funciones permiten obtener el total de compras, calcular descuentos y calcular importes.
+- **Consistencia:** las funciones de total de compras y descuento aplican el mismo criterio para considerar los estados de las ventas.
 - **Mantenimiento:** centralizar reglas y cálculos reduce la duplicación de lógica.
 - **Permisos:** SQL Server permite conceder permisos de ejecución sobre procedimientos sin dar acceso directo a todas las tablas, si la seguridad se configura adecuadamente.
 
@@ -96,11 +97,11 @@ Se ejecutó una prueba de inserción, modificación y eliminación de un product
 
 ### 6.1. Total de compras y descuentos
 
-Resultados obtenidos al ejecutar las funciones sobre los clientes de prueba:
+Después de corregir las funciones para excluir las ventas pendientes y anuladas, se ejecutaron nuevamente las consultas de prueba.
 
-| DNI de cliente | Total de compras | Descuento obtenido |
+| DNI de cliente | Total de compras consideradas | Descuento obtenido |
 |---|---:|---:|
-| 20123456 | $69.000,00 | 0 % |
+| 20123456 | $33.000,00 | 0 % |
 | 25654321 | $44.000,00 | 0 % |
 | 28777888 | $41.000,00 | 0 % |
 | 30987654 | $0,00 | 0 % |
@@ -109,7 +110,9 @@ Resultados obtenidos al ejecutar las funciones sobre los clientes de prueba:
 | 40333444 | $0,00 | 0 % |
 | 42555666 | $0,00 | 0 % |
 
-Los clientes consultados obtuvieron un descuento del 0 % porque sus totales no alcanzaban los umbrales establecidos.
+Para el cliente `20123456`, se identificó una venta pendiente de $36.000 y una venta entregada de $33.000. La función corregida consideró únicamente la venta entregada, por lo que devolvió un total de $33.000 y un descuento del 0 %.
+
+Los descuentos obtenidos fueron del 0 % porque los totales considerados no superaban los umbrales establecidos.
 
 ### 6.2. Cálculo del importe de venta
 
@@ -122,12 +125,17 @@ Ambos resultados coinciden con el cálculo esperado.
 
 ### 6.3. Verificación de los umbrales de descuento
 
-| Total de compras | Descuento esperado | Resultado obtenido |
-|---:|---:|---:|
-| $279.000,00 | 5 % | `0.05` |
-| $554.000,00 | 10 % | `0.10` |
+Se verificó la lógica de los porcentajes mediante una consulta con importes de prueba:
 
-Las pruebas controladas verificaron los dos niveles de descuento adicionales. Las ventas ficticias se revirtieron mediante `ROLLBACK`.
+| Total acumulado de prueba | Descuento esperado | Resultado obtenido |
+|---:|---:|---:|
+| $150.000,00 | 0 % | `0.00` |
+| $200.000,00 | 0 % | `0.00` |
+| $200.001,00 | 5 % | `0.05` |
+| $500.000,00 | 5 % | `0.05` |
+| $500.001,00 | 10 % | `0.10` |
+
+Los cinco resultados coincidieron con las reglas establecidas. Esta consulta verificó la lógica de los umbrales mediante una expresión `CASE`; no constituyó una ejecución directa de `dbo.CalcularDescuento` para cada importe.
 
 ## 7. Comparación de rendimiento
 
@@ -154,13 +162,17 @@ En esta ejecución, la función escalar tardó aproximadamente 5,14 veces más q
 ## 8. Ventajas y aplicaciones
 
 - **Reutilización:** la lógica se define una vez y se ejecuta cuando es necesaria.
-- **Validación:** los procedimientos controlan valores negativos y existencia de productos.
+- **Validación:** los procedimientos controlan los valores de precio y stock y la existencia de productos.
 - **Consistencia:** las funciones centralizan cálculos de importes, totales y descuentos.
 - **Mantenimiento:** los cambios en las reglas pueden realizarse en los objetos correspondientes, en lugar de duplicarse en muchas consultas.
 
 ## 9. Conclusiones
 
-Se implementaron y probaron tres procedimientos almacenados para insertar, modificar y eliminar productos, junto con tres funciones para calcular el total de compras, la tasa de descuento y el importe de venta. Las pruebas funcionales mostraron los resultados esperados, incluidos los casos de descuento del 0 %, 5 % y 10 %.
+Se implementaron y probaron tres procedimientos almacenados para insertar, modificar y eliminar productos, junto con tres funciones para calcular el total de compras, la tasa de descuento y el importe de venta.
+
+Durante las pruebas se corrigieron las funciones `CalcularTotalComprasCliente` y `CalcularDescuento` para que consideraran únicamente las ventas confirmadas, preparadas y entregadas. También se reforzaron las validaciones de precio y stock en los procedimientos de inserción y modificación de productos.
+
+Las pruebas con el cliente `20123456` confirmaron un total acumulado de $33.000 y un descuento del 0 %. La consulta de prueba de umbrales produjo los resultados esperados para los descuentos del 0 %, 5 % y 10 %, aunque esa consulta verificó la lógica de los porcentajes y no ejecutó directamente la función almacenada para cada importe.
 
 Las mediciones muestran que el rendimiento depende del tipo de operación y de cómo se diseñe la comparación. La función escalar fue más lenta que la multiplicación directa en la prueba realizada. La comparación de inserciones no fue equivalente, por lo que debe interpretarse con cautela.
 
@@ -173,5 +185,5 @@ Las capturas de SQL Server Management Studio documentan:
 1. La existencia de los tres procedimientos almacenados y las tres funciones.
 2. Los resultados de las funciones de total de compras, descuentos e importes.
 3. La inserción, modificación y eliminación de un producto temporal.
-4. La verificación de los descuentos del 5 % y del 10 %.
+4. La verificación de los umbrales de descuento del 0 %, 5 % y 10 %.
 5. Los resultados de las dos pruebas de rendimiento.
