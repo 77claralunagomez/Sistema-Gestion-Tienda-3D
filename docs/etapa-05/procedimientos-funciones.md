@@ -89,9 +89,29 @@ Los productos insertados mediante el procedimiento se modificaron con `dbo.sp_Mo
 
 Los productos 10, 11 y 12 se eliminaron mediante `dbo.sp_EliminarProducto`. La consulta posterior no devolvió filas para esos códigos. Antes de eliminarlos se comprobó que no tuvieran registros relacionados en `Detalle_Venta`, `Movimiento_Stock` ni `Proveedor_producto`.
 
-### 5.5. Prueba transaccional
+### 5.5. Pruebas de validación y restricciones de integridad
 
-Se ejecutó una prueba de inserción, modificación y eliminación de un producto temporal dentro de una transacción que finalizó con `ROLLBACK`. Se observaron los resultados de cada operación y luego se deshicieron los cambios, por lo que el producto temporal no quedó guardado.
+Se realizaron pruebas adicionales para verificar el comportamiento de los procedimientos almacenados ante datos inválidos y operaciones que no pueden ejecutarse.
+
+| Procedimiento | Caso de prueba | Resultado obtenido |
+|---|---|---|
+| `dbo.sp_InsertarProducto` | Precio igual a cero | Error 50010: el precio debe ser mayor que cero. |
+| `dbo.sp_InsertarProducto` | Stock nulo | Error 50011: el stock no puede ser negativo ni nulo. |
+| `dbo.sp_EliminarProducto` | Producto con ventas asociadas | Error 50016: no se puede eliminar el producto porque tiene ventas asociadas. |
+| `dbo.sp_EliminarProducto` | Producto inexistente | Error 50015: el producto no existe. |
+
+También se inspeccionaron las claves foráneas que referencian a `Producto`:
+
+| Clave foránea | Tabla relacionada | Acción al eliminar |
+|---|---|---|
+| `FK_DetalleVenta_Producto` | `Detalle_Venta` | `NO_ACTION` |
+| `FK_MovimientoStock_Producto` | `Movimiento_Stock` | `NO_ACTION` |
+| `FK_ProveedorProducto_Producto` | `Proveedor_producto` | `NO_ACTION` |
+
+En una prueba inicial, se intentó eliminar el producto con código 1 dentro de una transacción controlada. SQL Server rechazó la operación con el error 547 debido a la restricción FK_DetalleVenta_Producto. La transacción se revirtió. Posteriormente, se incorporó una validación en el procedimiento para informar esta situación mediante el error personalizado 50016.
+Estas pruebas verificaron las validaciones personalizadas y el funcionamiento de las restricciones de integridad referencial.
+
+
 
 ## 6. Resultados de las funciones
 

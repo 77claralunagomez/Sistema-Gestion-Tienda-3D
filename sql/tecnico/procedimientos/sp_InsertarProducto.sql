@@ -27,7 +27,8 @@ BEGIN
         (@descripcion, @precio, @nombre, @stock,
          @codigo_categoria, @id_marca, @id_unidad);
 
-    SELECT CONVERT(INT, SCOPE_IDENTITY()) AS codigo_producto,
-           'Producto insertado correctamente' AS resultado;
+    SELECT
+        CONVERT(INT, SCOPE_IDENTITY()) AS codigo_producto,
+        'Producto insertado correctamente' AS resultado;
 END;
 GO
