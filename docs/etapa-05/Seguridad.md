@@ -29,7 +29,7 @@ Los objetivos principales fueron:
 
 Los archivos correspondientes se encuentran en:
 
-`sql/tecnico/seguridad/`
+`sql/tecnico/Seguridad/`
 
 ---
 
@@ -183,7 +183,7 @@ SELECT
 | --- | --- |
 | `0` | Autenticación mixta habilitada |
 
-**Evidencia:** [01 — Autenticación mixta](../../sql/tecnico/seguridad/evidencias/01-autenticacion-mixta.png)
+**Evidencia:** [01 — Autenticación mixta](../../sql/tecnico/Seguridad/evidencias/01-autenticacion-mixta.png)
 
 ### 3.2. Creación de LOGIN y USER
 
@@ -226,9 +226,9 @@ Los resultados confirmaron la existencia de cuatro LOGIN de tipo `SQL_LOGIN`, to
 
 **Evidencias:**
 
-- [10 — Usuarios y roles creados](../../sql/tecnico/seguridad/evidencias/10-usuarios-roles-creados.png)
-- [13 — Verificación de LOGIN](../../sql/tecnico/seguridad/evidencias/13-verificacion-logins.png)
-- [14 — Verificación de USER](../../sql/tecnico/seguridad/evidencias/14-verificacion-usuarios.png)
+- [10 — Usuarios y roles creados](../../sql/tecnico/Seguridad/evidencias/10-usuarios-roles-creados.png)
+- [13 — Verificación de LOGIN](../../sql/tecnico/Seguridad/evidencias/13-verificacion-logins.png)
+- [14 — Verificación de USER](../../sql/tecnico/Seguridad/evidencias/14-verificacion-usuarios.png)
 
 ### 3.3. Creación de roles y asignación de usuarios
 
@@ -253,8 +253,8 @@ Las membresías se comprobaron mediante las vistas:
 
 **Evidencias:**
 
-- [03 — Usuario administrador](../../sql/tecnico/seguridad/evidencias/03-usuario-administrador.png)
-- [11 — Asignación de usuarios a roles](../../sql/tecnico/seguridad/evidencias/11-asignacion-usuarios-roles.png)
+- [03 — Usuario administrador](../../sql/tecnico/Seguridad/evidencias/03-usuario-administrador.png)
+- [11 — Asignación de usuarios a roles](../../sql/tecnico/Seguridad/evidencias/11-asignacion-usuarios-roles.png)
 
 ### 3.4. Asignación de permisos
 
@@ -275,8 +275,8 @@ El usuario lector recibe el permiso `SELECT` directamente y también mediante `ro
 
 **Evidencias:**
 
-- [02 — Permisos de usuarios y roles](../../sql/tecnico/seguridad/evidencias/02-permisos-usuarios-roles.png)
-- [12 — Permisos asignados](../../sql/tecnico/seguridad/evidencias/12-permisos-asignados.png)
+- [02 — Permisos de usuarios y roles](../../sql/tecnico/Seguridad/evidencias/02-permisos-usuarios-roles.png)
+- [12 — Permisos asignados](../../sql/tecnico/Seguridad/evidencias/12-permisos-asignados.png)
 
 ---
 
@@ -343,7 +343,7 @@ Posteriormente, la transacción se revirtió mediante `ROLLBACK` para evitar conse
 
 **Resultado:** INSERT permitido.
 
-**Evidencia:** [04 — INSERT autorizado al administrador](../../sql/tecnico/seguridad/evidencias/04-insert-administrador.png)
+**Evidencia:** [04 — INSERT autorizado al administrador](../../sql/tecnico/Seguridad/evidencias/04-insert-administrador.png)
 
 ### 5.2. Prueba 2 — INSERT directo con usuario lector
 
@@ -355,7 +355,7 @@ SQL Server rechazó la inserción y devolvió el **error 229**, correspondiente a l
 
 **Resultado:** INSERT denegado.
 
-**Evidencia:** [05 — INSERT denegado al lector](../../sql/tecnico/seguridad/evidencias/05-insert-lector-denegado.png)
+**Evidencia:** [05 — INSERT denegado al lector](../../sql/tecnico/Seguridad/evidencias/05-insert-lector-denegado.png)
 
 ### 5.3. Prueba 3 — Ejecución del procedimiento almacenado
 
@@ -388,7 +388,7 @@ La prueba devolvió el resultado **PRUEBA EXITOSA**.
 
 **Resultado:** ejecución autorizada del procedimiento almacenado.
 
-**Evidencia:** [06 — Ejecución permitida al lector](../../sql/tecnico/seguridad/evidencias/06-exec-lector-permitido.png)
+**Evidencia:** [06 — Ejecución permitida al lector](../../sql/tecnico/Seguridad/evidencias/06-exec-lector-permitido.png)
 
 ### 5.4. Verificación complementaria — ROLLBACK
 
@@ -408,7 +408,7 @@ La numeración de las columnas `IDENTITY` puede avanzar aunque se revierta una tr
 
 **Resultado:** reversión comprobada.
 
-**Evidencia:** [07 — Verificación del ROLLBACK](../../sql/tecnico/seguridad/evidencias/07-verificacion-rollback.png)
+**Evidencia:** [07 — Verificación del ROLLBACK](../../sql/tecnico/Seguridad/evidencias/07-verificacion-rollback.png)
 
 ### 5.5. Prueba 4 — SELECT permitido mediante rol
 
@@ -422,7 +422,7 @@ SQL Server permitió consultar cinco productos.
 
 **Resultado:** SELECT permitido mediante rol.
 
-**Evidencia:** [08 — SELECT permitido con rol](../../sql/tecnico/seguridad/evidencias/08-select-con-rol.png)
+**Evidencia:** [08 — SELECT permitido con rol](../../sql/tecnico/Seguridad/evidencias/08-select-con-rol.png)
 
 ### 5.6. Prueba 5 — SELECT denegado sin rol
 
@@ -434,7 +434,7 @@ SQL Server devolvió el **error 229**, impidiendo el acceso a la información.
 
 **Resultado:** SELECT denegado.
 
-**Evidencia:** [09 — SELECT denegado sin rol](../../sql/tecnico/seguridad/evidencias/09-select-sin-rol-denegado.png)
+**Evidencia:** [09 — SELECT denegado sin rol](../../sql/tecnico/Seguridad/evidencias/09-select-sin-rol-denegado.png)
 
 ---
 
@@ -459,24 +459,24 @@ El comprobante 22 pertenece a una ejecución anterior y no se utiliza como eviden
 
 Las capturas de pantalla obtenidas mediante SSMS se encuentran en:
 
-`sql/tecnico/seguridad/evidencias/`
+`sql/tecnico/Seguridad/evidencias/`
 
 | Archivo de evidencia | Contenido comprobado |
 | --- | --- |
-| [01-autenticacion-mixta.png](../../sql/tecnico/seguridad/evidencias/01-autenticacion-mixta.png) | Autenticación mixta habilitada |
-| [02-permisos-usuarios-roles.png](../../sql/tecnico/seguridad/evidencias/02-permisos-usuarios-roles.png) | Inspección de permisos de usuarios y roles |
-| [03-usuario-administrador.png](../../sql/tecnico/seguridad/evidencias/03-usuario-administrador.png) | Pertenencia del administrador a `db_owner` |
-| [04-insert-administrador.png](../../sql/tecnico/seguridad/evidencias/04-insert-administrador.png) | INSERT autorizado al administrador |
-| [05-insert-lector-denegado.png](../../sql/tecnico/seguridad/evidencias/05-insert-lector-denegado.png) | INSERT denegado al lector |
-| [06-exec-lector-permitido.png](../../sql/tecnico/seguridad/evidencias/06-exec-lector-permitido.png) | Ejecución permitida del procedimiento |
-| [07-verificacion-rollback.png](../../sql/tecnico/seguridad/evidencias/07-verificacion-rollback.png) | Verificación de reversión |
-| [08-select-con-rol.png](../../sql/tecnico/seguridad/evidencias/08-select-con-rol.png) | SELECT permitido mediante rol |
-| [09-select-sin-rol-denegado.png](../../sql/tecnico/seguridad/evidencias/09-select-sin-rol-denegado.png) | SELECT denegado sin rol |
-| [10-usuarios-roles-creados.png](../../sql/tecnico/seguridad/evidencias/10-usuarios-roles-creados.png) | Cuatro usuarios y dos roles personalizados |
-| [11-asignacion-usuarios-roles.png](../../sql/tecnico/seguridad/evidencias/11-asignacion-usuarios-roles.png) | Asignación de usuarios a roles |
-| [12-permisos-asignados.png](../../sql/tecnico/seguridad/evidencias/12-permisos-asignados.png) | Cuatro permisos `GRANT` |
-| [13-verificacion-logins.png](../../sql/tecnico/seguridad/evidencias/13-verificacion-logins.png) | Cuatro LOGIN habilitados |
-| [14-verificacion-usuarios.png](../../sql/tecnico/seguridad/evidencias/14-verificacion-usuarios.png) | Cuatro USER asociados a sus LOGIN |
+| [01-autenticacion-mixta.png](../../sql/tecnico/Seguridad/evidencias/01-autenticacion-mixta.png) | Autenticación mixta habilitada |
+| [02-permisos-usuarios-roles.png](../../sql/tecnico/Seguridad/evidencias/02-permisos-usuarios-roles.png) | Inspección de permisos de usuarios y roles |
+| [03-usuario-administrador.png](../../sql/tecnico/Seguridad/evidencias/03-usuario-administrador.png) | Pertenencia del administrador a `db_owner` |
+| [04-insert-administrador.png](../../sql/tecnico/Seguridad/evidencias/04-insert-administrador.png) | INSERT autorizado al administrador |
+| [05-insert-lector-denegado.png](../../sql/tecnico/Seguridad/evidencias/05-insert-lector-denegado.png) | INSERT denegado al lector |
+| [06-exec-lector-permitido.png](../../sql/tecnico/Seguridad/evidencias/06-exec-lector-permitido.png) | Ejecución permitida del procedimiento |
+| [07-verificacion-rollback.png](../../sql/tecnico/Seguridad/evidencias/07-verificacion-rollback.png) | Verificación de reversión |
+| [08-select-con-rol.png](../../sql/tecnico/Seguridad/evidencias/08-select-con-rol.png) | SELECT permitido mediante rol |
+| [09-select-sin-rol-denegado.png](../../sql/tecnico/Seguridad/evidencias/09-select-sin-rol-denegado.png) | SELECT denegado sin rol |
+| [10-usuarios-roles-creados.png](../../sql/tecnico/Seguridad/evidencias/10-usuarios-roles-creados.png) | Cuatro usuarios y dos roles personalizados |
+| [11-asignacion-usuarios-roles.png](../../sql/tecnico/Seguridad/evidencias/11-asignacion-usuarios-roles.png) | Asignación de usuarios a roles |
+| [12-permisos-asignados.png](../../sql/tecnico/Seguridad/evidencias/12-permisos-asignados.png) | Cuatro permisos `GRANT` |
+| [13-verificacion-logins.png](../../sql/tecnico/Seguridad/evidencias/13-verificacion-logins.png) | Cuatro LOGIN habilitados |
+| [14-verificacion-usuarios.png](../../sql/tecnico/Seguridad/evidencias/14-verificacion-usuarios.png) | Cuatro USER asociados a sus LOGIN |
 
 Las **14 evidencias** fueron incorporadas al paquete de Seguridad.
 
