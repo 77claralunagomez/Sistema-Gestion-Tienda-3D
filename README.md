@@ -1,91 +1,128 @@
-# 🚀 Tienda3D — Sistema Integral de Gestión de Ventas e Inventario
+﻿# Tienda3D — Sistema de Gestión de Ventas e Inventario
 
-[![SQL Server](https://img.shields.io/badge/Database-SQL_Server_Express-blue.svg)](https://www.microsoft.com/sql-server/)
-[![Status](https://img.shields.io/badge/Status-Production_Ready-success.svg)]()
-[![Architecture](https://img.shields.io/badge/Architecture-3FN_Normalized-orange.svg)]()
+**Proyecto académico de Bases de Datos I — Equipo 39**  
+**Motor de base de datos:** Microsoft SQL Server Express  
+**Herramienta de desarrollo y administración:** SQL Server Management Studio (SSMS)
 
-> **La solución definitiva de base de datos relacional para comercios especializados en insumos de impresión 3D.** Diseñada para maximizar el control operativo, garantizar la integridad financiera de las ventas y ofrecer trazabilidad absoluta sobre el stock de filamentos, resinas y repuestos.
+## 1. Descripción del proyecto
 
----
+Tienda3D es un proyecto de base de datos relacional orientado a la administración de ventas e inventario de un comercio de insumos para impresión 3D. Su dominio comprende productos como filamentos, resinas, repuestos y herramientas, además del registro de clientes, comprobantes de venta y movimientos de existencias.
 
-## 💎 ¿Por qué Tienda3D? (Propuesta de Valor)
+El trabajo se desarrolló en cinco etapas, desde la definición de requerimientos y el diseño del modelo relacional hasta su implementación en SQL Server y la incorporación de procedimientos almacenados, funciones, transacciones, disparadores, índices y controles de acceso.
 
-En el mercado de la impresión 3D, gestionar bobinas de filamento por kilo, resinas por litro, fraccionamientos por metro y repuestos mecánicos puede convertirse en un desafío operativo. **Tienda3D** resuelve esta problemática de punta a punta mediante un motor relacional en SQL Server que garantiza:
+## 2. Objetivos
 
-* **Control de Stock en Tiempo Real:** Cero sobreventas y cero stock negativo gracias a reglas de integridad automatizadas.
-* **Inmutabilidad Financiera:** Congelamiento automático de precios unitarios por venta, protegiendo el historial comercial ante la inflación o actualización de catálogos.
-* **Seguridad Transaccional ACID:** Operaciones de venta 100% atómicas que descuentan inventario y registran movimientos en un solo paso seguro.
-* **Trazabilidad y Auditoría Inmutable:** Registro automático e inalterable de quién, cuándo y qué precios o stocks se modificaron en el catálogo.
+- Modelar las entidades y relaciones necesarias para el funcionamiento del comercio.
+- Normalizar el esquema relacional y definir restricciones de integridad.
+- Registrar productos, clientes, ventas y movimientos de stock.
+- Elaborar consultas e informes sobre las operaciones comerciales.
+- Implementar lógica de negocio mediante T-SQL.
+- Evaluar el comportamiento de procedimientos, funciones y consultas mediante pruebas.
+- Administrar el acceso a la base de datos utilizando usuarios, roles y permisos.
 
----
+## 3. Equipo de trabajo
 
-## 👥 Equipo de Desarrollo (Equipo 39)
+**Equipo 39**
 
-* **Cuzziol**, Eric Eduardo
-* **Gómez**, Clara Luna
-* **Rodríguez**, Geraldine Janet
-* **Romero García**, Anabel
-* **Schmidke**, Alejandro Nicolás
+- Cuzziol, Eric Eduardo
+- Gómez, Clara Luna
+- Rodríguez, Geraldine Janet
+- Romero García, Anabel
+- Schmidke, Alejandro Nicolás
 
----
+Los aportes individuales se registran en los manifiestos de contribución correspondientes a cada etapa, junto con los archivos y commits asociados.
 
-## 🏗️ Descripción del Producto por Etapas
+## 4. Desarrollo por etapas
 
-El desarrollo de **Tienda3D** abarcó un ciclo de vida de ingeniería de software estructurado en 5 etapas evolutivas:
+### Etapa I — Requerimientos y dominio del negocio
 
-### 📌 Etapa 1: Requerimientos y Dominio del Negocio
-* **Alcance:** Gestión completa del catálogo de insumos (PLA, ABS, PETG, resinas SLA, repuestos, herramientas), administración de clientes/contactos, registro de ventas, control de inventario y atención de consultas de clientes.
-* **Reglas de Negocio Clave (RN):**
-  * **RN.01 & RN.12:** Descuento automático de stock e imposición estricta de stock no negativo.
-  * **RN.03:** Congelamiento del precio unitario al momento exacto de la venta.
-  * **RN.11 & RN.14:** Gestión formal de estados de venta (Pendiente, Confirmada, Preparada, Entregada, Anulada) con restitución de stock ante anulaciones.
-  * **RN.09:** Control de inventario según la unidad de comercialización del producto (kilogramos, metros, litros, unidades).
+Se definieron el alcance del sistema y las reglas de negocio relacionadas con el catálogo, los clientes, la comercialización y el inventario. Entre los aspectos considerados se encuentran la actualización de existencias, la conservación del precio de venta, los estados de los comprobantes y las unidades de comercialización.
 
-### 📐 Etapa 2: Normalización y Diseño del Modelo Relacional
-* **Arquitectura 3FN:** Estructura optimizada bajo la **Tercera Forma Normal**, eliminando la redundancia de datos y las dependencias transitivas.
-* **Tablas Paramétricas:** Desacoplamiento de dominios repetitivos mediante tablas de tipo dedicadas (`Unidad_comercio`, `Tipo_movimiento_stock`, `Tipo_Estado_Venta`, `Estado_Consulta`).
-* **Relaciones Flexibles:** Separación de entidades entre `Usuario` (credenciales/roles) y `Cliente` (facturación), permitiendo registrar ventas presenciales de clientes sin cuenta digital.
 
-### 🛡️ Etapa 3: Restricciones de Integridad y Poblado Físico (DDL / DML)
-* **Integridad Estructural (DDL):** Definición rigurosa con claves primarias autoincrementales (`IDENTITY`), claves foráneas explicitadas y dominios protegidos mediante `CHECK` (`precio > 0`, `stock >= 0`, `cantidad > 0`) y `UNIQUE` (`email`, códigos de catálogos).
-* **Poblado Coherente (DML):** Script de carga inicial jerarquizado para asegurar el enlace de datos de prueba desde tablas independientes (Nivel 0) hasta transaccionales (Niveles 3 y 4).
-* **Validaciones del Motor:** Pruebas de estrés que confirman el bloqueo del motor SQL ante intentos de inserción con precios negativos, DNI duplicados o claves foráneas inexistentes.
+### Etapa II — Modelo relacional y normalización
 
-### 📊 Etapa 4: Informes Comerciales y Consultas de Negocio
-* **Comprobantes y Facturación:** Consulta consolidada con funciones de ventana (`SUM(...) OVER(PARTITION BY)`) para obtener subtotales por renglón y el total acumulado por comprobante.
-* **Inteligencia de Clientes:** Reportes analíticos agrupados para identificar clientes VIP con compras superiores a $50.000 abonadas en Efectivo o Transferencia Bancaria.
-* **Reportes Agregados por Categoría:** Análisis de facturación y rotación de insumos por categoría durante rangos de fechas específicos, considerando únicamente ventas concretadas (`Entregada`).
+Se desarrollaron los modelos de datos y el proceso de normalización hasta la tercera forma normal (3FN), documentando entidades, atributos, relaciones y dependencias. El diseño diferencia, entre otras, las entidades de clientes, usuarios, productos y ventas.
 
-### ⚡ Etapa 5: Programación T-SQL Avanzada (SP, Funciones, Transacciones y Triggers)
-* **Procedimientos Almacenados (ABM):** Moduladores de lógica de negocio (`sp_InsertarProducto`, `sp_ModificarProducto`, `sp_EliminarProducto`) con control explícito de excepciones personalizadas (`THROW 50000+`).
-* **Lógica Transaccional ACID (`sp_RegistrarVenta3D`):** Procedimiento que encapsula en un bloque `BEGIN TRAN` / `COMMIT` / `ROLLBACK`:
-  1. Verificación de existencia y disponibilidad física.
-  2. Inserción de cabecera de `Venta`.
-  3. Inserción de ítems en `Detalle_Venta`.
-  4. Descuento automático de unidades/kilos en `Producto`.
-  5. Registro del egreso formal en `Movimiento_Stock`.
-* **Triggers de Auditoría Inmutable:** Disparadores automáticos (`trg_Auditoria_Producto_Update` y `trg_Auditoria_Producto_Delete`) que capturan las tablas virtuales `inserted` y `deleted` para guardar en `Auditoria_Producto` el historial exacto de variaciones de precios y stock.
-* **Funciones y Medición de Rendimiento:** Funciones escalares para cálculo de descuentos dinámicos e importes, complementadas con benchmarks de prueba de rendimiento T-SQL.
+**Documentación:** [Etapa II](docs/etapa-02/) · [Normalización](docs/etapa-02/Normalizacion_documento.md) · [Modelo relacional](docs/etapa-02/modeloRelacional.md)
 
----
+### Etapa III — Implementación física e integridad
 
-## 📂 Estructura del Repositorio
+Se elaboraron scripts DDL y DML para crear y poblar la base de datos. El esquema incorpora claves primarias y foráneas, restricciones sobre los datos y comprobaciones documentadas de integridad referencial y de dominio.
+
+**Documentación:** [Implementación](docs/etapa-03/implementacion.md) · [Restricciones](docs/etapa-03/Restricciones-integridad.md) · [Pruebas](docs/etapa-03/pruebas-validacion.md)
+
+**Scripts:** [DDL](sql/ddl/ddl.sql) · [Datos de prueba](sql/dml/datos_prueba.sql)
+
+### Etapa IV — Consultas e informes comerciales
+
+Se desarrollaron consultas para presentar comprobantes, obtener información de ventas y analizar operaciones por criterios comerciales, incluyendo agregaciones, filtros y cálculos sobre los datos registrados.
+
+**Documentación:** [Comprobante de venta](docs/etapa-04/comprobante-venta.md) · [Consulta avanzada](docs/etapa-04/consuta-avanzada.md) · [Informe de ventas](docs/etapa-04/informe-ventas.md)
+
+**Scripts:** [Consultas SQL](sql/consultas/)
+
+### Etapa V — Programación y administración avanzada en T-SQL
+
+Esta etapa integra los siguientes temas técnicos:
+
+| Tema | Implementación | Documentación |
+| --- | --- | --- |
+| Procedimientos almacenados | Alta, modificación y eliminación de productos; pruebas y benchmark de inserciones | [Procedimientos y funciones](docs/etapa-05/procedimientos-funciones.md) |
+| Funciones | Cálculos de importes, compras de clientes y descuentos; pruebas y benchmark | [Procedimientos y funciones](docs/etapa-05/procedimientos-funciones.md) |
+| Transacciones | Registro de ventas con control transaccional y actualización de existencias | [Transacciones](docs/etapa-05/transacciones.md) |
+| Triggers | Registro de operaciones de actualización y eliminación de productos en una tabla de auditoría | [Triggers y auditoría](docs/etapa-05/triggers-auditoria.md) |
+| Índices | Creación y análisis de índices sobre la base de datos | [Índices](docs/etapa-05/indices.md) |
+| Seguridad | Autenticación, usuarios, roles, permisos y pruebas de acceso autorizadas y denegadas | [Seguridad](docs/etapa-05/Seguridad.md) |
+
+Los scripts y las evidencias de cada tema se encuentran en [sql/tecnico/](sql/tecnico/).
+
+#### Seguridad: pruebas documentadas
+
+En el módulo de Seguridad se configuraron cuentas y roles para diferenciar los permisos del administrador, el vendedor y los usuarios de consulta. Se comprobó que el administrador podía insertar una venta, mientras que el usuario vendedor no podía realizar una inserción directa en la tabla `Venta`, aunque sí ejecutar el procedimiento autorizado `sp_RegistrarVenta3D`.
+
+También se verificaron las consultas permitidas y denegadas según los roles, así como la reversión de una operación temporal mediante `ROLLBACK`.
+
+**Evidencias:** [Informe de Seguridad](docs/etapa-05/Seguridad.md) · [Capturas de pruebas](sql/tecnico/Seguridad/evidencias/)
+
+## 5. Organización del repositorio
 
 ```text
 Sistema-Gestion-Tienda-3D/
-├── docs/                      # Documentación completa de todas las etapas
-│   ├── etapa-01/             # Caso de negocio, alcance y Reglas de Negocio (RN)
-│   ├── etapa-02/             # Proceso de normalización (1FN, 2FN, 3FN) y DER
-│   ├── etapa-03/             # Restricciones de integridad, DDL/DML y pruebas
-│   ├── etapa-04/             # Consultas de negocio e informes agregados
-│   └── etapa-05/             # T-SQL avanzado: SP, Funciones, Transacciones y Triggers
-├── sql/                       # Scripts SQL listos para ejecución
-│   ├── ddl/                   # Script DDL de creación de tablas y restricciones
-│   ├── dml/                   # Script DML de poblado con datos de prueba
-│   ├── consultas/             # Reportes de facturación e informes de ventas
-│   └── tecnico/               # Lógica programada en T-SQL
-│       ├── funciones/         # Funciones escalares y pruebas de rendimiento
-│       ├── procedimientos/    # Procedimientos almacenados para gestión de productos
-│       ├── transacciones/     # SP transaccional sp_RegistrarVenta3D
-│       └── triggers/          # Tabla y triggers de auditoría de catálogo
-└── README.md                  # Presentación general del producto
+├── docs/
+│   ├── etapa-01/             # Requerimientos y reglas de negocio
+│   ├── etapa-02/             # Modelo relacional y normalización
+│   ├── etapa-03/             # Implementación y restricciones
+│   ├── etapa-04/             # Consultas e informes
+│   └── etapa-05/             # Documentación de temas técnicos
+├── sql/
+│   ├── consultas/            # Consultas comerciales
+│   ├── ddl/                  # Creación del esquema
+│   ├── dml/                  # Datos de prueba
+│   └── tecnico/
+│       ├── funciones/        # Funciones y pruebas
+│       ├── indices/          # Índices y evidencias
+│       ├── procedimientos/   # Procedimientos y benchmarks
+│       ├── Seguridad/        # Usuarios, roles, permisos y capturas
+│       ├── transacciones/    # Procedimiento transaccional de ventas
+│       └── triggers/         # Auditoría de productos
+└── README.md
+```
+
+## 6. Requisitos y uso del proyecto
+
+Para trabajar con la base de datos se requiere una instancia de **SQL Server** y una herramienta de ejecución de consultas, como **SQL Server Management Studio**.
+
+Una secuencia general de preparación consiste en:
+
+1. Crear el esquema mediante [`sql/ddl/ddl.sql`](sql/ddl/ddl.sql).
+2. Cargar los registros de prueba con [`sql/dml/datos_prueba.sql`](sql/dml/datos_prueba.sql).
+3. Revisar las dependencias y ejecutar los scripts técnicos necesarios desde [`sql/tecnico/`](sql/tecnico/).
+4. Consultar la documentación de cada etapa antes de repetir pruebas que modifiquen datos.
+
+**Importante:** los scripts técnicos tienen dependencias entre objetos y algunos incluyen operaciones de prueba. Se recomienda revisarlos antes de ejecutarlos y trabajar sobre una base de datos de desarrollo. Las contraseñas de ejemplo de Seguridad deben reemplazarse por credenciales seguras y no publicarse en el repositorio.
+
+## 7. Documentación y trazabilidad
+
+Cada etapa dispone de documentación en [`docs/`](docs/) y de scripts relacionados en [`sql/`](sql/). Los manifiestos individuales de contribución y el historial de commits permiten identificar la participación de los integrantes del equipo.
+
+El repositorio corresponde a un **trabajo académico**. Los resultados de las pruebas documentadas se refieren al entorno utilizado para el desarrollo y no constituyen una certificación de funcionamiento en producción.
